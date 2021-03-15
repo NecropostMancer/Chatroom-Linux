@@ -1,0 +1,481 @@
+# depslib dependency file v1.0
+1614690823 source:/home/ghd/chatting-room/src/BaseTCPServer.cpp
+	"BaseTCPServer.h"
+	"Log.h"
+	<cstdlib>
+	<cstring>
+	<unistd.h>
+	<cstdio>
+	<errno.h>
+	"Log.h"
+	"ThreadPool.h"
+
+1614690844 /home/ghd/chatting-room/include/BaseTCPServer.h
+	<sys/socket.h>
+	<sys/types.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<fcntl.h>
+	<sys/epoll.h>
+	<pthread.h>
+	"ServerWorker.h"
+	<unistd.h>
+
+1614764031 source:/home/ghd/chatting-room/main.cpp
+	<iostream>
+	"BaseTCPServer.h"
+	"ThreadPool.h"
+	"Database.h"
+	"Log.h"
+
+1614763763 source:/home/ghd/chatting-room/src/Log.cpp
+	"Log.h"
+	<cstdio>
+	<cstring>
+	<cstdarg>
+
+1614762873 /home/ghd/chatting-room/include/Log.h
+
+1614750620 source:/home/ghd/chatting-room/src/Database.cpp
+	"Database.h"
+	"Log.h"
+	"User.h"
+
+1615359075 /home/ghd/chatting-room/include/Database.h
+	<mysqlx/xapi.h>
+	<mutex>
+	<map>
+	"User.h"
+	"Room.h"
+
+1613989627 source:/home/ghd/chatting-room/src/Permission.cpp
+	"Permission.h"
+
+1614064498 /home/ghd/chatting-room/include/Permission.h
+	"User.h"
+
+1614679371 /home/ghd/chatting-room/include/User.h
+	<string>
+
+1614681964 /home/ghd/chatting-room/include/Room.h
+	"User.h"
+
+1613989590 source:/home/ghd/chatting-room/src/Room.cpp
+	"Room.h"
+
+1613994046 source:/home/ghd/chatting-room/src/Server.cpp
+	"Server.h"
+
+1613994046 /home/ghd/chatting-room/include/Server.h
+
+1614775915 source:/home/ghd/chatting-room/src/ServerWorker.cpp
+	"ServerWorker.h"
+	<sys/epoll.h>
+	<unistd.h>
+	"Log.h"
+	"User.pb.h"
+	"Chat.pb.h"
+	"Room.pb.h"
+	"Error.pb.h"
+
+1614737835 /home/ghd/chatting-room/include/ServerWorker.h
+	"ThreadPool.h"
+	"sys/uio.h"
+	<cstdlib>
+	<cstring>
+	<sys/socket.h>
+	<netinet/in.h>
+
+1613989571 source:/home/ghd/chatting-room/src/User.cpp
+	"User.h"
+
+1615359067 /home/ghd/chatting-room/include/ThreadPool.h
+	<pthread.h>
+	<list>
+	<mutex>
+	<semaphore.h>
+	<exception>
+
+1615199262 source:/home/ghd/chatting-room/protobuf/out/Chat.pb.cc
+	"Chat.pb.h"
+	<algorithm>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/reflection_ops.h>
+	<google/protobuf/wire_format.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 /home/ghd/chatting-room/protobuf/out/Chat.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/metadata_lite.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	"Error.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 /home/ghd/chatting-room/protobuf/out/Error.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/metadata_lite.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 source:/home/ghd/chatting-room/protobuf/out/Error.pb.cc
+	"Error.pb.h"
+	<algorithm>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/reflection_ops.h>
+	<google/protobuf/wire_format.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 source:/home/ghd/chatting-room/protobuf/out/Room.pb.cc
+	"Room.pb.h"
+	<algorithm>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/reflection_ops.h>
+	<google/protobuf/wire_format.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 /home/ghd/chatting-room/protobuf/out/Room.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/metadata_lite.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/unknown_field_set.h>
+	"Error.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 source:/home/ghd/chatting-room/protobuf/out/User.pb.cc
+	"User.pb.h"
+	<algorithm>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/reflection_ops.h>
+	<google/protobuf/wire_format.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 /home/ghd/chatting-room/protobuf/out/User.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/metadata_lite.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	"Error.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615445135 source:/home/ghd/chatting-room-single/main.cpp
+	<iostream>
+	"ThreadPool.h"
+	"Database.h"
+	"Log.h"
+	"SingleThreadTCPServer.h"
+
+1614690844 /home/ghd/chatting-room-single/include/BaseTCPServer.h
+	<sys/socket.h>
+	<sys/types.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<fcntl.h>
+	<sys/epoll.h>
+	<pthread.h>
+	"ServerWorker.h"
+	<unistd.h>
+
+1615445235 /home/ghd/chatting-room-single/include/ServerWorker.h
+	"ThreadPool.h"
+	"sys/uio.h"
+	<cstdlib>
+	<cstring>
+	<sys/socket.h>
+	<netinet/in.h>
+
+1615369596 /home/ghd/chatting-room-single/include/ThreadPool.h
+	<pthread.h>
+	<list>
+	<mutex>
+	<semaphore.h>
+	<exception>
+
+1615359075 /home/ghd/chatting-room-single/include/Database.h
+	<mysqlx/xapi.h>
+	<mutex>
+	<map>
+	"User.h"
+	"Room.h"
+
+1614679371 /home/ghd/chatting-room-single/include/User.h
+	<string>
+
+1614681964 /home/ghd/chatting-room-single/include/Room.h
+	"User.h"
+
+1614762873 /home/ghd/chatting-room-single/include/Log.h
+
+1615199262 source:/home/ghd/chatting-room-single/protobuf/out/Chat.pb.cc
+	"Chat.pb.h"
+	<algorithm>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/reflection_ops.h>
+	<google/protobuf/wire_format.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 /home/ghd/chatting-room-single/protobuf/out/Chat.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/metadata_lite.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	"Error.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 /home/ghd/chatting-room-single/protobuf/out/Error.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/metadata_lite.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 source:/home/ghd/chatting-room-single/protobuf/out/Error.pb.cc
+	"Error.pb.h"
+	<algorithm>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/reflection_ops.h>
+	<google/protobuf/wire_format.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 source:/home/ghd/chatting-room-single/protobuf/out/Room.pb.cc
+	"Room.pb.h"
+	<algorithm>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/reflection_ops.h>
+	<google/protobuf/wire_format.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 /home/ghd/chatting-room-single/protobuf/out/Room.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/metadata_lite.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/unknown_field_set.h>
+	"Error.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 source:/home/ghd/chatting-room-single/protobuf/out/User.pb.cc
+	"User.pb.h"
+	<algorithm>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/reflection_ops.h>
+	<google/protobuf/wire_format.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1615199262 /home/ghd/chatting-room-single/protobuf/out/User.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/metadata_lite.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	"Error.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1614690823 source:/home/ghd/chatting-room-single/src/BaseTCPServer.cpp
+	"BaseTCPServer.h"
+	"Log.h"
+	<cstdlib>
+	<cstring>
+	<unistd.h>
+	<cstdio>
+	<errno.h>
+	"Log.h"
+	"ThreadPool.h"
+
+1614750620 source:/home/ghd/chatting-room-single/src/Database.cpp
+	"Database.h"
+	"Log.h"
+	"User.h"
+
+1614763763 source:/home/ghd/chatting-room-single/src/Log.cpp
+	"Log.h"
+	<cstdio>
+	<cstring>
+	<cstdarg>
+
+1613989627 source:/home/ghd/chatting-room-single/src/Permission.cpp
+	"Permission.h"
+
+1614064498 /home/ghd/chatting-room-single/include/Permission.h
+	"User.h"
+
+1613989590 source:/home/ghd/chatting-room-single/src/Room.cpp
+	"Room.h"
+
+1613994046 source:/home/ghd/chatting-room-single/src/Server.cpp
+	"Server.h"
+
+1613994046 /home/ghd/chatting-room-single/include/Server.h
+
+1615373612 source:/home/ghd/chatting-room-single/src/ServerWorker.cpp
+	"ServerWorker.h"
+	<sys/epoll.h>
+	<unistd.h>
+	"Log.h"
+	"User.pb.h"
+	"Chat.pb.h"
+	"Room.pb.h"
+	"Error.pb.h"
+
+1613989571 source:/home/ghd/chatting-room-single/src/User.cpp
+	"User.h"
+
+1615445146 /home/ghd/chatting-room-single/include/SingleThreadTCPServer.h
+	<sys/socket.h>
+	<sys/types.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<fcntl.h>
+	<sys/epoll.h>
+	<pthread.h>
+	<cstdlib>
+	<cstring>
+	<unistd.h>
+	<cstdio>
+	<errno.h>
+
+1615445274 source:/home/ghd/chatting-room-single/src/SingleThreadTCPServer.cpp
+	"SingleThreadTCPServer.h"
+	"Log.h"
+	"ServerWorker.h"
+	<iostream>
+

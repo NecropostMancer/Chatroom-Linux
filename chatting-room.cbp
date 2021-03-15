@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="chatting-room" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/chatting-room" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="include" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/chatting-room" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=c++11" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Linker>
+			<Add directory="../../../usr/local/mysql/connector-c++-/lib64/debug" />
+		</Linker>
+		<Unit filename="include/ChatLog.h" />
+		<Unit filename="include/Database.h" />
+		<Unit filename="include/ISerializable.h" />
+		<Unit filename="include/Log.h" />
+		<Unit filename="include/Permission.h" />
+		<Unit filename="include/QueueCAS.h" />
+		<Unit filename="include/Room.h" />
+		<Unit filename="include/Server.h" />
+		<Unit filename="include/ServerWorker.h" />
+		<Unit filename="include/SingleThreadTCPServer.h" />
+		<Unit filename="include/ThreadPool.h" />
+		<Unit filename="include/User.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="protobuf/out/Chat.pb.cc" />
+		<Unit filename="protobuf/out/Chat.pb.h" />
+		<Unit filename="protobuf/out/Error.pb.cc" />
+		<Unit filename="protobuf/out/Error.pb.h" />
+		<Unit filename="protobuf/out/Room.pb.cc" />
+		<Unit filename="protobuf/out/Room.pb.h" />
+		<Unit filename="protobuf/out/User.pb.cc" />
+		<Unit filename="protobuf/out/User.pb.h" />
+		<Unit filename="src/ChatLog.cpp" />
+		<Unit filename="src/Database.cpp" />
+		<Unit filename="src/Log.cpp" />
+		<Unit filename="src/Permission.cpp" />
+		<Unit filename="src/Room.cpp" />
+		<Unit filename="src/Server.cpp" />
+		<Unit filename="src/ServerWorker.cpp" />
+		<Unit filename="src/SingleThreadTCPServer.cpp" />
+		<Unit filename="src/User.cpp" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
