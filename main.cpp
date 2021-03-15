@@ -5,9 +5,9 @@ using namespace std;
 
 //Database a;
 
-void testAllDB()
+void testAllDB(Database &a)
 {
-Database a; // if this is global will get a segment fault
+// if this is global will get a segment fault
     //1. user add and modify name.
     a.AddUser(User("1","1","1"));
     a.AddUser(User("2","2","2"));
@@ -38,14 +38,13 @@ Database a; // if this is global will get a segment fault
 #include "SingleThreadTCPServer.h"
 int main()
 {
-
-    //BaseTCPServer server;
-
-    //testAllDB();
-    //Log::LogOut("fff");
-    //server.Start(8086);
+    Database a;
+    //testAllDB(a);
     SingleThreadTCPServer server;
+    ServerWorker worker[65535];
+    worker[0].ConnectDb(a);
     server.Init(8086);
+    server.AssignWorkers(worker);
     server.Start();
     return 0;
 }

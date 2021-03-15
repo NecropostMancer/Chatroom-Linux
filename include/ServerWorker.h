@@ -8,27 +8,38 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <map>
+
+#include "Database.h"
 class ServerWorker
 {
     public:
         ServerWorker();
         virtual ~ServerWorker();
-        void process(const char* input,const char* output,size_t outputLen);
+        void process(const char*);
         void Init(int sockfd,sockaddr_in addr){
             m_Sockfd = sockfd;
-            m_Address = addr
-        };
+            m_Address = addr;
+
+        }
         void Close()
         {
-            m_UserCount--;
+            m_db->CloseUser(m_Sockfd);
         }
-        static int m_UserCount;
+        void Res(const char* raw,int max_len)
+        {
+
+        }
+        void ConnectDb(Database &database)
+        {
+            m_db = &database;
+        }
+        static Database* m_db;
     protected:
 
     private:
 
         bool ParseMessage();
-        bool PostResponse();
+        bool PostResponse(int len);
 
         bool Register();
 
@@ -50,16 +61,9 @@ class ServerWorker
         int m_ivCnt;
 
         const char* m_ReadBuf;
-        const char* m_WriteBuf;
 
-        static std::map<std::string,int>* UsernameToFd;
-
-        constexpr static size_t BUFFER_SIZE = 512;
         int m_Sockfd;
         sockaddr_in m_Address;
-        char* m_WriteBuf;
-        char m_Buf[BUFFER_SIZE];
-
 
 };
 

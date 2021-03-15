@@ -13,6 +13,8 @@
 #include <unistd.h>
 #include <cstdio>
 #include <errno.h>
+
+#include "ServerWorker.h"
 class SingleThreadTCPServer
 {
     public:
@@ -20,21 +22,22 @@ class SingleThreadTCPServer
         virtual ~SingleThreadTCPServer();
         int Start();
         int Init(int port);
+        void AssignWorkers(ServerWorker* workers, int workerNum = 65535)
+        {
+            m_Workers = workers;
+        }
     protected:
 
     private:
-        const int MAX_FD = 65535;
         const int BACKLOG = 5;
         const int MAX_EVENT = 10000;
-
+        ServerWorker* m_Workers;
         int m_ListeningSocket;
         bool m_Stop;
 
         int epollfd;
 
         int m_Usercnt = 0;
-
-        //ServerWorker m_Worker;
 
         inline static int SetNonBlocking(int fd)
         {
@@ -79,23 +82,12 @@ class SingleThreadTCPServer
             epoll_ctl(epollfd, EPOLL_CTL_MOD, fd, &event);
         }
 
-        static void* Worker(void* arg);
+        constexpr static size_t BUFFER_SIZE = 512;
+        char m_TmpBuffer[BUFFER_SIZE];
 
-    struct fds
-    {
-        int epollfd;
-        int sockfd;
-    };
-    constexpr static size_t BUFFER_SIZE = 512;
-    struct userData
-    {
-        sockaddr_in address;
-        char* write_buf;
-        char buf[BUFFER_SIZE];
-    };
-        void OnAccept();
+        void OnAccept(int fd,sockaddr_in clientAddress);
         void OnRead();
-        void OnWrite();
+        //void OnWrite();
         void OnError();
 };
 

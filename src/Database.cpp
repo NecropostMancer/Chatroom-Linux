@@ -39,6 +39,9 @@ Database::Database()
         return;
     }
 
+    m_UserAlive = new userAlive[MAX_FD];
+    m_Livefd = new int[MAX_FD];
+
 #ifdef DROP
     res = mysqlx_sql(sess,
                      "DROP DATABASE `db`",
@@ -339,10 +342,10 @@ bool Database::AddChatlog(std::string username,int roomid,time_t time)
     return false;
 }
 
-ChatLog Database::GetChatlogAfterTime(int roomid,time_t time,int cnt = -1)
+ChatLog Database::GetChatlogAfterTime(int roomid,time_t time,int cnt)
 {
     std::lock_guard<std::mutex> lock(m_WorkLock);
-    return new ChatLog();
+    return ChatLog();
 }
 
 

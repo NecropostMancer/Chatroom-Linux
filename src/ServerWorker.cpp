@@ -3,14 +3,10 @@
 #include <unistd.h>
 
 #include "Log.h"
-int ServerWorker::m_UserCount = 0;
-std::map<std::string,int> ServerWorker::UsernameToFd = nullptr;
+Database* ServerWorker::m_db = nullptr;
 ServerWorker::ServerWorker()
 {
-    if(UsernameToFd!=nullptr)
-    {
-        UsernameToFd = new map<std::string,int>();
-    }
+
     //ctor
 }
 
@@ -19,13 +15,13 @@ ServerWorker::~ServerWorker()
     //dtor
 }
 
-void ServerWorker::process(const char* input,const char* output,size_t outputLen)
+void ServerWorker::process(const char* data)
 {
-    m_ReadBuf = input;
-    m_WriteBuf = output;
+    m_ReadBuf = data;
     ParseMessage();
-    PostResponse();
+    PostResponse(65535);
 }
+
 
 #include "User.pb.h"
 #include "Chat.pb.h"
@@ -68,7 +64,7 @@ bool ServerWorker::ParseMessage()
     return false;
 }
 
-bool ServerWorker::PostResponse()
+bool ServerWorker::PostResponse(int len)
 {
     return false;
 }

@@ -229,7 +229,7 @@
 	<google/protobuf/port_def.inc>
 	<google/protobuf/port_undef.inc>
 
-1615445135 source:/home/ghd/chatting-room-single/main.cpp
+1615800142 source:/home/ghd/chatting-room-single/main.cpp
 	<iostream>
 	"ThreadPool.h"
 	"Database.h"
@@ -247,13 +247,15 @@
 	"ServerWorker.h"
 	<unistd.h>
 
-1615445235 /home/ghd/chatting-room-single/include/ServerWorker.h
+1615802637 /home/ghd/chatting-room-single/include/ServerWorker.h
 	"ThreadPool.h"
 	"sys/uio.h"
 	<cstdlib>
 	<cstring>
 	<sys/socket.h>
 	<netinet/in.h>
+	<map>
+	"Database.h"
 
 1615369596 /home/ghd/chatting-room-single/include/ThreadPool.h
 	<pthread.h>
@@ -262,12 +264,15 @@
 	<semaphore.h>
 	<exception>
 
-1615359075 /home/ghd/chatting-room-single/include/Database.h
+1615796552 /home/ghd/chatting-room-single/include/Database.h
 	<mysqlx/xapi.h>
 	<mutex>
 	<map>
 	"User.h"
 	"Room.h"
+	"ChatLog.h"
+	<sys/socket.h>
+	<netinet/in.h>
 
 1614679371 /home/ghd/chatting-room-single/include/User.h
 	<string>
@@ -421,7 +426,7 @@
 	"Log.h"
 	"ThreadPool.h"
 
-1614750620 source:/home/ghd/chatting-room-single/src/Database.cpp
+1615797098 source:/home/ghd/chatting-room-single/src/Database.cpp
 	"Database.h"
 	"Log.h"
 	"User.h"
@@ -446,7 +451,7 @@
 
 1613994046 /home/ghd/chatting-room-single/include/Server.h
 
-1615373612 source:/home/ghd/chatting-room-single/src/ServerWorker.cpp
+1615802668 source:/home/ghd/chatting-room-single/src/ServerWorker.cpp
 	"ServerWorker.h"
 	<sys/epoll.h>
 	<unistd.h>
@@ -459,7 +464,7 @@
 1613989571 source:/home/ghd/chatting-room-single/src/User.cpp
 	"User.h"
 
-1615445146 /home/ghd/chatting-room-single/include/SingleThreadTCPServer.h
+1615802985 /home/ghd/chatting-room-single/include/SingleThreadTCPServer.h
 	<sys/socket.h>
 	<sys/types.h>
 	<netinet/in.h>
@@ -472,10 +477,23 @@
 	<unistd.h>
 	<cstdio>
 	<errno.h>
+	"ServerWorker.h"
 
-1615445274 source:/home/ghd/chatting-room-single/src/SingleThreadTCPServer.cpp
+1615800412 source:/home/ghd/chatting-room-single/src/SingleThreadTCPServer.cpp
 	"SingleThreadTCPServer.h"
 	"Log.h"
-	"ServerWorker.h"
 	<iostream>
+
+1615448408 /home/ghd/chatting-room-single/include/ChatLog.h
+	<string>
+
+1615779473 source:/home/ghd/chatting-room-single/src/Channel.cpp
+	"Channel.h"
+
+1615795689 /home/ghd/chatting-room-single/include/Channel.h
+	"ServerWorker.h"
+	<vector>
+
+1615448322 source:/home/ghd/chatting-room-single/src/ChatLog.cpp
+	"ChatLog.h"
 

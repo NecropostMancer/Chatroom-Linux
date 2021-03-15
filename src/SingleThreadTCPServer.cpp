@@ -3,8 +3,6 @@
 #include "Log.h"
 
 
-#include "ServerWorker.h"
-
 SingleThreadTCPServer::SingleThreadTCPServer()
 {
     //ctor
@@ -51,10 +49,9 @@ int SingleThreadTCPServer::Init(int port)
 int SingleThreadTCPServer::Start()
 {
     Log::LogOut("Server Start.");
-    ServerWorker* workers = new ServerWorker[MAX_FD];
-    userData* users = new userData[MAX_FD];
+
+
     epoll_event events[MAX_EVENT];
-    int livefd[MAX_FD] = {};
     while(!m_Stop)
     {
         int ret = epoll_wait( epollfd, events, MAX_EVENT, -1);
@@ -78,33 +75,25 @@ int SingleThreadTCPServer::Start()
                     Log::Error(strerror(errno));
                     continue;
                 }
-                if (ServerWorker::m_UserCount >= MAX_FD)
-                {
-                    const char* w = "too many users.";
-                    Log::Warning(w);
 
-                    close(cfd);
-                    continue;
-                }
                 Log::Debug("new connection coming");
                 Addfd(epollfd,cfd,true);
-                workers[cfd].Init(cfd,clientAddress);
-                //users[cfd].address = clientAddress;
-                m_Usercnt++;
-                livefd[m_Usercnt] = cfd;
+
+                m_Workers[cfd].Init(cfd,clientAddress);
             }
             else if (events[i].events & (EPOLLRDHUP | EPOLLHUP | EPOLLERR))
             {
-                //workers[sockfd].close();
+                m_Workers[events[i].data.fd].Close();
                 close(events[i].data.fd);
                 m_Usercnt--;
             }
             else if (events[i].events & EPOLLIN)
             {
+
                 int connfd = events[i].data.fd;
-                memset(users[connfd].buf,0,BUFFER_SIZE);
-                int recvNum = recv(connfd, users[connfd].buf,BUFFER_SIZE-1,0);
-                Log::Debug("Get:%s",users[connfd].buf);
+                memset(m_TmpBuffer,0,BUFFER_SIZE);
+                int recvNum = recv(connfd, m_TmpBuffer,BUFFER_SIZE-1,0);
+                Log::Debug("Get:%s",m_TmpBuffer);
                 Modfd(epollfd,connfd,EPOLLIN);
                 if(ret < 0)
                 {
@@ -112,9 +101,6 @@ int SingleThreadTCPServer::Start()
                     {
                         close(connfd);
                         //move last one to replace closed one
-                        users[livefd[i]] = users[livefd[m_Usercnt]];
-                        livefd[i] = livefd[m_Usercnt];
-                        m_Usercnt--;
                     }
                 }
                 else if( ret == 0)
@@ -122,27 +108,24 @@ int SingleThreadTCPServer::Start()
                 }
                 else
                 {
-                    for(int j = 1;j<=m_Usercnt;j++)
-                    {
-                        if(livefd[j] == connfd)
-                        {
-                            continue;
-                        }
-                        Modfd(epollfd,livefd[j],EPOLLOUT);
-                        users[livefd[j]].write_buf = users[connfd].buf;
-                    }
+                    //send right after the processing end,
+                    //so i decided not to enable epollout manually.
+                    //Modfd(epollfd,livefd[j],EPOLLOUT);
+                    m_Workers[connfd].process(m_TmpBuffer);
                 }
             }
             else if (events[i].events & EPOLLOUT)
             {
+            /*
                 int connfd = events[i].data.fd;
                 if(!users[connfd].write_buf)
                 {
                     continue;
                 }
                 int retcnt = send(connfd,users[connfd].write_buf,strlen(users[connfd].write_buf),0);
-                users[connfd].write_buf = NULL;
+                //users[connfd].write_buf = NULL;
                 Modfd(epollfd,connfd,EPOLLIN);
+                */
             }
             else
             {
