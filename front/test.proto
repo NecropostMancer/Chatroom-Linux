@@ -1,0 +1,7 @@
+package testpackage;
+syntax = "proto3";
+
+message testMessage {
+    uint32 timestamp = 1;
+    string message = 2;
+}

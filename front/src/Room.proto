@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+import "Error.proto";
+
+message RoomRequest {
+    enum Operation {
+        CREATE = 0;
+        JOIN = 1;
+        LEAVE = 2;
+    }
+    int32 roomid = 1;
+    string username = 2;
+    Operation operation = 3;
+}
+
+message RoomControl {
+    enum Operation {
+        LOCK = 0;
+        UNLOCK = 1;
+        MUTE = 2;
+        PROMOTE = 3;
+    }
+    int32 roomid = 1;
+    string username = 2;
+    Operation operation = 3;
+    string payload = 4;
+}
+
+message RoomResponse {
+    Error error = 1;
+}

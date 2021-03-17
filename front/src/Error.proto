@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message Error {
+    enum Code {
+        SUCCESS = 0;
+        UNKNOWN = 1;
+        INNERERROR = 2;
+        WRONGAUTH = 3;
+        NOTFOUND = 4;
+        TOOBUSY = 5;
+    }
+    Code code = 1;
+}
