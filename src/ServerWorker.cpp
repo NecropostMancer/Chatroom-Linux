@@ -23,18 +23,41 @@ void ServerWorker::process(const char* data)
 }
 
 
-#include "User.pb.h"
-#include "Chat.pb.h"
-#include "Room.pb.h"
-#include "Error.pb.h"
 
 bool ServerWorker::ParseMessage()
 {
-    RegisterRequest regReq;
-    LoginRequest logReq;
-    ChangeNameRequest changeName;
-    ChatMessageRequest chatIncoming;
-    RoomRequest roomReq;
+    WrapperClientMessage msg;
+    if(msg.ParseFromString(m_ReadBuf))
+    {
+        int msgCase = msg.msg_case();
+        Log::Debug("msg case:%d",msgCase);
+
+        switch(msgCase){
+            case 0://NO_ONE_OF
+                break;
+            case 1:
+                Chat(msg.chatmessagerequest());
+                break;
+            case 2:
+
+                break;
+            case 3:
+                break;
+            case 4:
+                Login(msg.loginrequest());
+                break;
+            case 5:
+                Register(msg.registerrequest());
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
+        }
+    }else{
+    /*
     if(regReq.ParseFromString(m_ReadBuf))
     {
         Log::Debug("RegisterRequest.");
@@ -59,57 +82,127 @@ bool ServerWorker::ParseMessage()
     {
         Log::Debug("RoomRequest.");
         return true;
+    }*/
+        Log::Debug("invaild.");
+        return false;
     }
-    Log::Debug("invaild.");
-    return false;
+    return true;
 }
 
 bool ServerWorker::PostResponse(int len)
 {
-    return false;
+    int cnt = write(m_Sockfd,m_Out.c_str(),m_Out.length());
+    Log::Debug("Write %d bytes.",cnt);
+    return true;
 }
 
-bool Register()
+bool ServerWorker::Register(RegisterRequest req)
+{
+    WrapperServerMessage res;
+    User user = ServerWorker::m_db->GetUser(req.username());
+    if(user.m_UserName.length() != 0)
+    {
+        LoginResponse* error = res.mutable_loginresponse();
+        error->mutable_error()->set_code(Error::WRONGAUTH);
+        res.SerializeToString(&m_Out);
+        return false;
+
+    }else{
+        user.m_UserName = req.username();
+        user.m_ShowName = req.showname();
+        user.m_PasswdSalt = req.password();
+        if(ServerWorker::m_db->AddUser(user))
+        {
+            LoginResponse* succ = res.mutable_loginresponse();
+            res.SerializeToString(&m_Out);
+            return true;
+        }
+    }
+    Error* error = res.mutable_error();
+    error->set_code(Error::INNERERROR);
+    res.SerializeToString(&m_Out);
+
+    return false;
+}
+bool ServerWorker::Login(LoginRequest req)
+{
+    WrapperServerMessage res;
+    User user = ServerWorker::m_db->GetUser(req.username());
+    if(user.m_UserName.length() == 0)
+    {
+        LoginResponse* error = res.mutable_loginresponse();
+        error->mutable_error()->set_code(Error::WRONGAUTH);
+        res.SerializeToString(&m_Out);
+        return false;
+
+    }else{
+        m_userName = user.m_UserName = req.username();
+        user.m_PasswdSalt = req.password();
+        User user = ServerWorker::m_db->GetUser(user.m_UserName);
+        if(user.m_UserName.length()!=0 && user.m_PasswdSalt == req.password())
+        {
+            LoginResponse* succ = res.mutable_loginresponse();
+            succ->set_token( user.m_UserName + "@" + "12345");
+            ServerWorker::m_db->OpenUser(m_Sockfd,m_Address,req.username());
+            res.SerializeToString(&m_Out);
+            InitChattingState();
+            return true;
+        }
+    }
+    Error* error = res.mutable_error();
+    error->set_code(Error::INNERERROR);
+    res.SerializeToString(&m_Out);
+    return false;
+}
+bool ServerWorker::Logout()
+{
+    for(auto pair:m_MyChannel)
+    {
+        pair.second->Leave(this);
+    }
+    return true;
+}
+bool ServerWorker::ChangeName()
 {
     return false;
 }
-bool Login()
+bool ServerWorker::JoinRoom(RoomRequest req)
 {
     return false;
 }
-bool Logout()
+bool ServerWorker::leaveRoom()
 {
     return false;
 }
-bool ChangeName()
+bool ServerWorker::CreateRoom()
 {
     return false;
 }
-bool JoinRoom()
+bool ServerWorker::LockRoom()
 {
     return false;
 }
-bool leaveRoom()
+bool ServerWorker::KickUser()
 {
     return false;
 }
-bool CreateRoom()
+bool ServerWorker::PromoteUser()
 {
     return false;
 }
-bool LockRoom()
+bool ServerWorker::Chat(ChatMessageRequest)
 {
     return false;
 }
-bool KickUser()
+void ServerWorker::InitChattingState()
 {
-    return false;
-}
-bool PromoteUser()
-{
-    return false;
-}
-bool Chat()
-{
-    return false;
+    Channel* ChannelList[100] = {0};
+
+    int len = ServerWorker::m_db->GetSubscribedChannel(m_userName,ChannelList,100);
+    for(int i =0;i<len;i++)
+    {
+        m_MyChannel.insert(std::pair<int,Channel*>(ChannelList[i]->GetRoomID(),ChannelList[i]));
+        ChannelList[i]->Join(this);
+    }
+
 }

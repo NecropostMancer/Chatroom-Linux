@@ -38,6 +38,7 @@
 		<Linker>
 			<Add directory="../../../usr/local/mysql/connector-c++-/lib64/debug" />
 		</Linker>
+		<Unit filename="include/Channel.h" />
 		<Unit filename="include/ChatLog.h" />
 		<Unit filename="include/Database.h" />
 		<Unit filename="include/ISerializable.h" />
@@ -59,6 +60,7 @@
 		<Unit filename="protobuf/out/Room.pb.h" />
 		<Unit filename="protobuf/out/User.pb.cc" />
 		<Unit filename="protobuf/out/User.pb.h" />
+		<Unit filename="src/Channel.cpp" />
 		<Unit filename="src/ChatLog.cpp" />
 		<Unit filename="src/Database.cpp" />
 		<Unit filename="src/Log.cpp" />

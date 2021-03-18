@@ -152,9 +152,11 @@ User Database::GetUser(std::string username)
         char tmp[50];
         size_t len= sizeof(tmp);
         user.m_UserName = username;
+        mysqlx_get_bytes(row,1,0,tmp,&len);
+        user.m_PasswdSalt = tmp;
         mysqlx_get_bytes(row,2,0,tmp,&len);
         user.m_ShowName = tmp;
-        user.m_PasswdSalt = "SIKE!";
+
     }
     return user;
 }
@@ -203,12 +205,53 @@ bool Database::AddRoom(std::string roomname,User user)
     return true;
 
 }
-//delete room* by the caller.
-bool Database::GetAllRoomByName(Room** Roooooom,std::string name, size_t len)
+int Database::GetUserJoinedRoom(Room** Roooooom,std::string username, size_t len)
 {
     std::lock_guard<std::mutex> lock(m_WorkLock);
     crud = mysqlx_sql_new(sess,
-                          "SELECT r.roomID, r.creator, r.name, r.roomID, u.name FROM `room` r INNER JOIN `user` u " \
+                          "SELECT roomID from `userInRoom`" \
+                          "WHERE username = ?" ,
+                          MYSQLX_NULL_TERMINATED);// todo:escape % : stackoverflow:how-can-i-with-mysqli-make-a-query-with-like-and-get-all-results
+    int rc = mysqlx_stmt_bind(crud, PARAM_STRING(username.c_str()),
+                                    PARAM_END);
+    if(rc != RESULT_OK)
+    {
+        Log::Error("get user joined room by name bind failed.");
+        return -1;
+    }
+    res = mysqlx_execute(crud);
+
+    RESULT_CHECK(res,crud);
+
+    size_t i = 0;
+    Roooooom[0] = new Room();
+    Roooooom[0]->m_roomID = 0;
+    Roooooom[0]->m_Name = "DEFAULT_PUBLIC_ROOM";
+    Roooooom[0]->m_Creator = "SERVER";
+    i++;
+    while((row = mysqlx_row_fetch_one(res)))
+    {
+        Room* room = new Room();
+        char tmp[50];
+        size_t len= sizeof(tmp);
+        long int tmp2;
+        mysqlx_get_sint(row,0,&tmp2);
+        room->m_roomID = static_cast<int>(tmp2);
+        Roooooom[i] = room;
+        i++;
+        if(i > len){
+            break;
+        }
+    }
+    return min(i,len);
+}
+
+//delete room* by the caller.
+int Database::GetAllRoomByName(Room** Roooooom,std::string name, size_t len)
+{
+    std::lock_guard<std::mutex> lock(m_WorkLock);
+    crud = mysqlx_sql_new(sess,
+                          "SELECT r.roomID, r.creator, r.name, u.name FROM `room` r INNER JOIN `user` u " \
                           "ON r.creator = u.username " \
                           "WHERE r.name LIKE CONCAT('%',?,'%') " \
                           "LIMIT ?" ,
@@ -219,7 +262,7 @@ bool Database::GetAllRoomByName(Room** Roooooom,std::string name, size_t len)
     if(rc != RESULT_OK)
     {
         Log::Error("get room by name bind failed.");
-        return false;
+        return -1;
     }
     res = mysqlx_execute(crud);
 
@@ -244,7 +287,7 @@ bool Database::GetAllRoomByName(Room** Roooooom,std::string name, size_t len)
             break;
         }
     }
-    return true;
+    return min(i,len);
 }
 
 Room Database::GetRoom(int roomID)
@@ -279,6 +322,36 @@ Room Database::GetRoom(int roomID)
     }
     return room;
 }
+//both
+bool Database::JoinRoom(std::string username,int roomid,Channel* channel)
+{
+    std::lock_guard<std::mutex> lock(m_WorkLock);
+    crud = mysqlx_sql_new(sess,
+                         "INSERT INTO db.userInRoom " \
+                         "(username,roomID,privilege) VALUES (?,?,?)",
+                         MYSQLX_NULL_TERMINATED);
+    int rc = mysqlx_stmt_bind(crud, PARAM_STRING(username.c_str()),
+                                    PARAM_SINT(roomid),
+                                    PARAM_SINT(0),
+                                    PARAM_END);
+    if(rc != RESULT_OK)
+    {
+        Log::Error("join room bind failed.");
+        return false;
+    }
+    res = mysqlx_execute(crud);
+
+    RESULT_CHECK(res,crud);
+
+    if(AliveChannel.find(roomid) == AliveChannel.end()){
+        channel = new Channel(roomid);
+        AliveChannel.insert(std::pair<int,Channel*>(roomid,channel));
+    }
+    else{
+        channel = (*AliveChannel.find(roomid)).second;
+    }
+    return true;
+}
 
 bool Database::JoinRoom(std::string username,int roomid)
 {
@@ -299,7 +372,30 @@ bool Database::JoinRoom(std::string username,int roomid)
     res = mysqlx_execute(crud);
 
     RESULT_CHECK(res,crud);
+
     return true;
+}
+
+
+int Database::GetSubscribedChannel(std::string username,Channel** channels,size_t max_len)
+{
+    Room** start = new Room*[max_len];
+    int ret = GetUserJoinedRoom(start,username,max_len);
+    Channel * channel;
+    for(int i=0;i<ret;i++)
+    {
+        int roomid = (*(start + i))->m_roomID;
+        if(AliveChannel.find(roomid) == AliveChannel.end()){
+            channel = new Channel(roomid);
+            AliveChannel.insert(std::pair<int,Channel*>(roomid,channel));
+        }
+        else{
+            channel = (*AliveChannel.find(roomid)).second;
+        }
+        channels[i] = channel;
+    }
+    delete [] start;
+    return ret;
 }
 
 bool Database::LeaveRoom(std::string username,int roomid)

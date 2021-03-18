@@ -55,8 +55,8 @@ int SingleThreadTCPServer::Start()
     while(!m_Stop)
     {
         int ret = epoll_wait( epollfd, events, MAX_EVENT, -1);
-        Log::Debug("Lets wait!");
-        Log::Debug("Get total event(s): %d",ret);
+
+        //Log::Debug("Get total event(s): %d",ret);
         if (ret < 0)
         {
             Log::Error("Epoll Failed.");
@@ -76,7 +76,7 @@ int SingleThreadTCPServer::Start()
                     continue;
                 }
 
-                Log::Debug("new connection coming");
+                Log::Debug("New connection is coming, open socket:%d.",cfd);
                 Addfd(epollfd,cfd,true);
 
                 m_Workers[cfd].Init(cfd,clientAddress);
@@ -85,6 +85,7 @@ int SingleThreadTCPServer::Start()
             {
                 m_Workers[events[i].data.fd].Close();
                 close(events[i].data.fd);
+                Log::Debug("Connection on socket %d is disconnected.",events[i].data.fd);
                 m_Usercnt--;
             }
             else if (events[i].events & EPOLLIN)
@@ -93,7 +94,7 @@ int SingleThreadTCPServer::Start()
                 int connfd = events[i].data.fd;
                 memset(m_TmpBuffer,0,BUFFER_SIZE);
                 int recvNum = recv(connfd, m_TmpBuffer,BUFFER_SIZE-1,0);
-                Log::Debug("Get:%s",m_TmpBuffer);
+                Log::Debug("Get %d length data:%s",recvNum,m_TmpBuffer);
                 Modfd(epollfd,connfd,EPOLLIN);
                 if(ret < 0)
                 {
