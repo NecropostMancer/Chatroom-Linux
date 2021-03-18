@@ -10,11 +10,11 @@ message WrapperClientMessage{
     oneof msg{
         ChatMessageRequest chatMessageRequest = 2;
         Error error = 3;
-        LoginRequest loginRequest = 3;
-        RegisterRequest registerRequest = 4;
-        ChangeNameRequest changeNameRequest = 5;
-        RoomRequest roomRequest = 6;
-        RoomControl roomControl = 7;
+        LoginRequest loginRequest = 4;
+        RegisterRequest registerRequest = 5;
+        ChangeNameRequest changeNameRequest = 6;
+        RoomRequest roomRequest = 7;
+        RoomControl roomControl = 8;
     }
 }
 

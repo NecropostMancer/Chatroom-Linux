@@ -1,16 +1,5 @@
 const net = require('net');
 
-var options = {
-    host: '127.0.0.1',
-    port: 12345
-};
-
-var tcp_client = net.Socket();
-
-tcp_client.connect(options,function(){
-    console.log("connected to server");
-    //tcp_client.write('yay!');
-})
 /*
 tcp_client.on("data",function(data){
     console.log("%s",data.toString());
@@ -25,13 +14,19 @@ tcp_client.on("error",function(error){
 })
 */
 
-/**
- * 一个合理的设计：
- * 读入一个信息后，进行如下操作：
- * 查询发送的房间
- * 查出所有房间中所有用户的socket
- * 挨个发送
- */
+const tcpClient = {
+    options : {
+        host: '127.0.0.1',
+        port: 12345
+    },
+    socket: net.Socket(),
+    init : function(){
+        this.socket.connect(options,function(){
+            console.log("connected to server");
+            //tcp_client.write('yay!');
+        })
+    }
+}
 
 const protobuf = require('protobufjs');
 const md5 = require('md5');
@@ -59,7 +54,9 @@ const protoStorage = {
     "LoginResponse":null,
     "RegisterRequest":null,
     "ChangeNameRequest":null,
-    "RegularResponse":null
+    "RegularResponse":null,
+    "Req":null,
+    "Res":null
 }
 
 const userState = {
@@ -85,17 +82,21 @@ async function LoadAllProto(){
     protoStorage["RegisterRequest"] = root.lookupType("RegisterRequest");
     protoStorage["ChangeNameRequest"] = root.lookupType("ChangeNameRequest");
     protoStorage["RegularResponse"] = root.lookupType("RegularResponse");
+    root = await protobuf.load("./Wrapper.proto");
+    protoStorage["Req"] = root.lookupType("WrapperClientMessage");
+    protoStorage["Res"] = root.lookupType("WrapperServerMessage");
 }
-LoadAllProto();
+
 //后端api
 function ProtobufSend(messageName,payload){
     let message = protoStorage[messageName].create(payload);
     console.log(message);
-    tcp_client.write(protoStorage[messageName].encode(message).finish());
-    
+    let bytes = protoStorage[messageName].encode(message).finish();
+    console.log(bytes);
+    tcpClient.socket.write(bytes);
+    let re = protoStorage[messageName].decode(bytes);
+    console.log(re);
 }
-
-tcp_client.on("data",(data)=>{ProtobufRead(data);});
 
 const ProtobufReciever = {
     _onRecieveMessageResponse:[],
@@ -120,9 +121,15 @@ const ProtobufReciever = {
     }
 }
 
-var ExpectedValidationResponse = undefined;
+var isLogin = false;
 
 function ProtobufRead(payload){
+    var res = protoStorage["Res"].decode(payload);
+    console.log(res);
+    if(res.loginResponse){
+        ProtobufReciever._onRecieveAuthResponse();
+    }
+    /*
     if(payload instanceof protoStorage["ChatMessageSend"]){
 
     }else if(payload instanceof protoStorage["ChatMessageResponse"]){
@@ -139,7 +146,8 @@ function ProtobufRead(payload){
         ProtobufReciever._onRecieveAuthResponse();
     }else if(payload instanceof protoStorage["RegularResponse"]){
 
-    }else{
+    }*/
+    else{
         console.log("unsupported message type.");
     }
 }
@@ -173,9 +181,12 @@ exports.LoginRequest = function (username,password){
             });
             console.log("send")
             try{
-                ProtobufSend("LoginRequest",{
+                ProtobufSend("Req",{
+                    test: 1,
+                    loginRequest:{
                     username : username,
                     password : password
+                    }
                 });
             }catch(e){
                 reject(e);
@@ -192,10 +203,13 @@ exports.RegisterRequest = function (username,password,showname){
                 resolve(response); 
             });
             try{
-                ProtobufSend("RegisterRequest",{
+                ProtobufSend("Req",{
+                    test: 1,
+                    registerRequest:{
                     username : username,
                     password : password,
                     showname : showname
+                    }
                 });
             }catch(e){
                 reject(e);
@@ -270,20 +284,10 @@ exports.RoomControl = function(opreation,roomid,extra){
     })
 }
 
-
-/*
-//测试
-//testProtobuf();
-LoadAllProto().then(() =>{
-    tcp_client.connect(options,function(){
-        console.log("connected");
-        LoginRequest("123","123");
-        RegisterRequest("username","password","showname");
-        ChatMessageRequest("msg",600);
-        RoomRequest(0,2);
-    })
+exports.StartClient = function(){
+    LoadAllProto().then(()=>{
+        tcpClient.init();
+        tcpClient.socket.on("data",(data)=>{ProtobufRead(data);});
+    });
     
-
-})
-
-*/
+}
