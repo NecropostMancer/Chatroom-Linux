@@ -95,7 +95,7 @@ int SingleThreadTCPServer::Start()
                 int connfd = events[i].data.fd;
                 memset(m_TmpBuffer,0,BUFFER_SIZE);
                 int recvNum = recv(connfd, m_TmpBuffer,BUFFER_SIZE-1,0);
-                Log::Debug("Get %d length data:%s",recvNum,m_TmpBuffer);
+                //Log::Debug("Get %d length data.",recvNum,m_TmpBuffer);
                 Modfd(epollfd,connfd,EPOLLIN);
                 if(ret < 0)
                 {

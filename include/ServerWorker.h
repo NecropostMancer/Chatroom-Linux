@@ -34,8 +34,9 @@ class ServerWorker : public IServerWorker
         void Close()
         {
             m_db->CloseUser(m_Sockfd);
-            delete m_MyChannel;
+
             Logout();
+            delete m_MyChannel;
         }
         virtual void Res(const char* raw,int max_len)
         {
