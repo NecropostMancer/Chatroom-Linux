@@ -1,6 +1,5 @@
 #include "ServerWorker.h"
-#include <sys/epoll.h>
-#include <unistd.h>
+
 
 #include "Log.h"
 Database* ServerWorker::m_db = nullptr;
@@ -156,7 +155,7 @@ bool ServerWorker::Login(LoginRequest req)
 }
 bool ServerWorker::Logout()
 {
-    for(auto pair:m_MyChannel)
+    for(auto pair:(*m_MyChannel))
     {
         pair.second->Leave(this);
     }
@@ -190,9 +189,14 @@ bool ServerWorker::PromoteUser()
 {
     return false;
 }
-bool ServerWorker::Chat(ChatMessageRequest)
+bool ServerWorker::Chat(ChatMessageRequest req)
 {
-    return false;
+    auto iter = m_MyChannel->find(req.roomid());
+    if(iter != m_MyChannel->end())
+    {
+        (iter->second)->Send(m_Out.c_str(),m_Out.length());
+    }
+    return true;
 }
 void ServerWorker::InitChattingState()
 {
@@ -201,7 +205,7 @@ void ServerWorker::InitChattingState()
     int len = ServerWorker::m_db->GetSubscribedChannel(m_userName,ChannelList,100);
     for(int i =0;i<len;i++)
     {
-        m_MyChannel.insert(std::pair<int,Channel*>(ChannelList[i]->GetRoomID(),ChannelList[i]));
+        m_MyChannel->insert(std::pair<int,Channel*>(ChannelList[i]->GetRoomID(),ChannelList[i]));
         ChannelList[i]->Join(this);
     }
 

@@ -41,7 +41,7 @@ int main()
     Database a;
     //testAllDB(a);
     SingleThreadTCPServer server;
-    ServerWorker worker[65535];
+    ServerWorker* worker = new ServerWorker[65535];
     worker[0].ConnectDb(a);
     server.Init(8086);
     server.AssignWorkers(worker);

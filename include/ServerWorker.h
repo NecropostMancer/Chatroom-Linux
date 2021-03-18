@@ -8,6 +8,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <map>
+#include <sys/epoll.h>
+#include <unistd.h>
 
 #include "Database.h"
 
@@ -27,16 +29,18 @@ class ServerWorker : public IServerWorker
         void Init(int sockfd,sockaddr_in addr){
             m_Sockfd = sockfd;
             m_Address = addr;
-
+            m_MyChannel = new std::map<int,Channel*>();
         }
         void Close()
         {
             m_db->CloseUser(m_Sockfd);
+            delete m_MyChannel;
             Logout();
         }
         virtual void Res(const char* raw,int max_len)
         {
-
+            int cnt = write(m_Sockfd,raw,max_len);
+            //Log::Debug("Write %d bytes.",cnt);
         }
         void ConnectDb(Database &database)
         {
@@ -77,7 +81,7 @@ class ServerWorker : public IServerWorker
         int m_Sockfd;
         sockaddr_in m_Address;
 
-        std::map<int,Channel*> m_MyChannel;
+        std::map<int,Channel*>* m_MyChannel;
         std::string m_userName;
 
 };

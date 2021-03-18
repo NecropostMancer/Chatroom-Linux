@@ -43,6 +43,7 @@ int SingleThreadTCPServer::Init(int port)
         return -1;
     }
     Addfd(epollfd,m_ListeningSocket,false);
+    m_Stop = false;
     return 0;
 }
 #include <iostream>
