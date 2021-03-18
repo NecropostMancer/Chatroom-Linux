@@ -1,6 +1,5 @@
 #include "ServerWorker.h"
-#include <sys/epoll.h>
-#include <unistd.h>
+
 
 #include "Log.h"
 Database* ServerWorker::m_db = nullptr;
@@ -27,19 +26,25 @@ void ServerWorker::process(const char* data)
 bool ServerWorker::ParseMessage()
 {
     WrapperClientMessage msg;
+    printf("Get data(%d bytes) \n",strlen(m_ReadBuf));
+    for(int i = 0;i<strlen(m_ReadBuf);i++){
+        printf("%d ",m_ReadBuf[i]);
+    }
+    printf("\n");
     if(msg.ParseFromString(m_ReadBuf))
     {
         int msgCase = msg.msg_case();
+
         Log::Debug("msg case:%d",msgCase);
 
         switch(msgCase){
             case 0://NO_ONE_OF
                 break;
             case 1:
-                Chat(msg.chatmessagerequest());
+
                 break;
             case 2:
-
+                Chat(msg.chatmessagerequest());
                 break;
             case 3:
                 break;
@@ -136,14 +141,12 @@ bool ServerWorker::Login(LoginRequest req)
         return false;
 
     }else{
-        m_userName = user.m_UserName = req.username();
-        user.m_PasswdSalt = req.password();
-        User user = ServerWorker::m_db->GetUser(user.m_UserName);
-        if(user.m_UserName.length()!=0 && user.m_PasswdSalt == req.password())
+        if(user.m_PasswdSalt == req.password())
         {
             LoginResponse* succ = res.mutable_loginresponse();
             succ->set_token( user.m_UserName + "@" + "12345");
             ServerWorker::m_db->OpenUser(m_Sockfd,m_Address,req.username());
+            m_userName = req.username();
             res.SerializeToString(&m_Out);
             InitChattingState();
             return true;
@@ -156,9 +159,9 @@ bool ServerWorker::Login(LoginRequest req)
 }
 bool ServerWorker::Logout()
 {
-    for(auto pair:m_MyChannel)
+    for(auto pair:(*m_MyChannel))
     {
-        pair.second->Leave(this);
+        (pair.second)->Leave(this);
     }
     return true;
 }
@@ -190,9 +193,14 @@ bool ServerWorker::PromoteUser()
 {
     return false;
 }
-bool ServerWorker::Chat(ChatMessageRequest)
+bool ServerWorker::Chat(ChatMessageRequest req)
 {
-    return false;
+    auto iter = m_MyChannel->find(req.roomid());
+    if(iter != m_MyChannel->end())
+    {
+        (iter->second)->Send(m_Out.c_str(),m_Out.length());
+    }
+    return true;
 }
 void ServerWorker::InitChattingState()
 {
@@ -201,7 +209,7 @@ void ServerWorker::InitChattingState()
     int len = ServerWorker::m_db->GetSubscribedChannel(m_userName,ChannelList,100);
     for(int i =0;i<len;i++)
     {
-        m_MyChannel.insert(std::pair<int,Channel*>(ChannelList[i]->GetRoomID(),ChannelList[i]));
+        m_MyChannel->insert(std::pair<int,Channel*>(ChannelList[i]->GetRoomID(),ChannelList[i]));
         ChannelList[i]->Join(this);
     }
 

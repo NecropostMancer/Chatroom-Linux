@@ -9,7 +9,7 @@ class Channel
         virtual ~Channel();
         void Send(const char* write, int MAX_LEN)
         {
-            for(int i= 0;i<workers.size();i++)
+            for(size_t i= 0;i<workers.size();i++)
             {
                 workers[i]->Res(write,MAX_LEN);
             }

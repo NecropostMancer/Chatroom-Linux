@@ -104,6 +104,8 @@ Database::~Database()
     //redisFree(m_Context);
     //delete sess;
     mysqlx_session_close(sess);
+    delete []m_UserAlive;
+    delete []m_Livefd;
 }
 
 bool Database::AddUser(User user)
