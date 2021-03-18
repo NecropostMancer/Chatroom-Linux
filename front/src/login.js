@@ -28,12 +28,20 @@ console.log(remote)
 
 const {LoginRequest ,RegisterRequest, StartClient} = require('./request.js')
 
+
+function test(){
+    var {ChatMessageRequest} = require('./request.js');
+    ChatMessageRequest("test1",0);   
+}
+
+
 function login(){
     let username = usernameElement.value;
     let password = passwordElement.value;
     LoginRequest(username,password).then(()=>{
-        remote.getCurrentWindow().setSize(1000,1000);
-        remote.getCurrentWindow().loadFile('./src/index.html')
+        test();
+        //remote.getCurrentWindow().setSize(1000,1000);
+        //remote.getCurrentWindow().loadFile('./src/index.html')
     }).catch((e)=>{
         console.log(e);
     })
