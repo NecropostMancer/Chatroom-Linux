@@ -1,0 +1,114 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+#root{
+    width: 100%;
+    text-align: left; 
+    margin: auto;
+    padding-top: 30px;
+}
+#root h1{
+    text-align: center;
+}
+div{
+    width: 300px;
+    margin: auto;
+    padding-top: 10px;
+}
+div input{
+    width: 100%;
+    height: 32px;
+    padding-left: 10px;
+    margin-top: 5px;
+}
+div input[type = "checkbox"]{
+    display: inline;
+    width: auto;
+    height: auto;
+    margin: 0;
+}
+.name{
+    color:gray;
+}
+
+.notice-item {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    overflow: hidden;
+    min-height: 32px;
+    color: black;
+    font-size: small;
+}
+
+.notice-item::before,
+.notice-item::after {
+    background-color: darkgray;
+    content: "";
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 50%;
+}
+
+.notice-item::before {
+    right: 0.5em;
+    margin-left: -50%;
+}
+.notice-item::after {
+    left: 0.5em;
+    margin-right: -50%;
+}
+
+#click .button{
+    display: inline-block;
+    border-radius: 25px;
+    padding: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+    margin-right: 160px;
+    color: white;
+    background-color: rgb(64, 29, 192);
+}
+#reg-click .button{
+    display: inline-block;
+    border-radius: 25px;
+    padding: 10px;
+    padding-left: 45px;
+    padding-right: 45px;
+    color: white;
+    background-color: rgb(64, 29, 192);
+}
+#click .button:hover{
+
+}
+
+#click span{
+    color: cornflowerblue;
+    font-size: small;
+}
+#rem span{
+    color:cornflowerblue;
+    font-size: small;
+}
+#rem input{
+    color: cornflowerblue;
+}
+#reg{
+    text-align: center;
+    color:cornflowerblue;
+}
+.hide{
+    display: none;
+}
+
+#reg-page #reg-click{
+    text-align: center;
+    width: 100%;
+}

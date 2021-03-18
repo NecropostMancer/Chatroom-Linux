@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "Error.proto";
+
+message ChatMessageRequest{
+    string username = 1;
+    string token = 2;
+    string msg = 3;
+    int32 roomid = 4;
+    string random = 5;
+}
+
+message ChatMessageSend{
+    string username = 1;
+    string msg = 2;
+    int32 roomid = 3;
+    int32 roomorder = 4;
+}
+
+message ChatResponse{
+    Error error = 1;
+}

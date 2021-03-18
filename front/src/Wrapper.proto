@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+import "Error.proto";
+import "Room.proto";
+import "Chat.proto";
+import "User.proto";
+
+message WrapperClientMessage{
+    int32 test = 1;
+    oneof msg{
+        ChatMessageRequest chatMessageRequest = 2;
+        Error error = 3;
+        LoginRequest loginRequest = 3;
+        RegisterRequest registerRequest = 4;
+        ChangeNameRequest changeNameRequest = 5;
+        RoomRequest roomRequest = 6;
+        RoomControl roomControl = 7;
+    }
+}
+
+message WrapperServerMessage{
+    int32 test = 1;
+    oneof msg{
+        RoomResponse roomResponse = 2;
+        Error error = 3;
+        ChatMessageSend chatMessageSend = 4;
+        ChatResponse chatResponse = 5;
+        LoginResponse loginResponse = 6;
+        RegularResponse regularResponse = 7;
+    }
+}
