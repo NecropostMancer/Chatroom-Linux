@@ -10,7 +10,15 @@
 #include <map>
 
 #include "Database.h"
-class ServerWorker
+
+#include "ServerWorkerInter.h"
+
+#include "User.pb.h"
+#include "Chat.pb.h"
+#include "Room.pb.h"
+#include "Error.pb.h"
+#include "Wrapper.pb.h"
+class ServerWorker : public IServerWorker
 {
     public:
         ServerWorker();
@@ -24,8 +32,9 @@ class ServerWorker
         void Close()
         {
             m_db->CloseUser(m_Sockfd);
+            Logout();
         }
-        void Res(const char* raw,int max_len)
+        virtual void Res(const char* raw,int max_len)
         {
 
         }
@@ -41,13 +50,13 @@ class ServerWorker
         bool ParseMessage();
         bool PostResponse(int len);
 
-        bool Register();
+        bool Register(RegisterRequest);
 
-        bool Login();
+        bool Login(LoginRequest);
         bool Logout();
         bool ChangeName();
 
-        bool JoinRoom();
+        bool JoinRoom(RoomRequest req);
         bool leaveRoom();
         bool CreateRoom();
 
@@ -55,15 +64,21 @@ class ServerWorker
         bool KickUser();
         bool PromoteUser();
 
-        bool Chat();
+        bool Chat(ChatMessageRequest req);
+
+        void InitChattingState();
 
         iovec m_iv[2];
         int m_ivCnt;
 
         const char* m_ReadBuf;
+        std::string m_Out;
 
         int m_Sockfd;
         sockaddr_in m_Address;
+
+        std::map<int,Channel*> m_MyChannel;
+        std::string m_userName;
 
 };
 

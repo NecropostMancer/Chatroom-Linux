@@ -1,11 +1,11 @@
 #ifndef CHANNEL_H
 #define CHANNEL_H
-#include "ServerWorker.h"
+#include "ServerWorkerInter.h"
 #include <vector>
 class Channel
 {
     public:
-        Channel();
+        Channel(int roomID):m_RoomID(roomID){};
         virtual ~Channel();
         void Send(const char* write, int MAX_LEN)
         {
@@ -14,12 +14,15 @@ class Channel
                 workers[i]->Res(write,MAX_LEN);
             }
         }
-        void Join(ServerWorker* worker){workers.push_back(worker);}
-        void Leave(ServerWorker* worker){}
+        void Join(IServerWorker* worker){workers.push_back(worker);}
+        void Leave(IServerWorker* worker){}
+        void Talk(IServerWorker* worker);
+        int GetRoomID(){return m_RoomID;}
     protected:
 
     private:
-        std::vector<ServerWorker*> workers;
+        std::vector<IServerWorker*> workers;
+        int m_RoomID;
 };
 
 #endif // CHANNEL_H

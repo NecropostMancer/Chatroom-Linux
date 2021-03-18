@@ -7,6 +7,7 @@
 #include "User.h"
 #include "Room.h"
 #include "ChatLog.h"
+#include "Channel.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 
@@ -20,11 +21,14 @@ class Database
         bool AddUser(User user);
         User GetUser(std::string username);
         bool GetUserInRoom(int roomID, bool aliveOnly = true);
+        int GetUserJoinedRoom(Room** Roooooom,std::string username, size_t len);//don't forget delete[]
         bool ModifyUserName(std::string username,std::string newname);
         bool AddRoom(std::string roomname,User user);
-        bool GetAllRoomByName(Room** Roooooom,std::string name, size_t len);
+        int GetAllRoomByName(Room** Roooooom,std::string name, size_t len);//don't forget delete[]
         Room GetRoom(int roomID);
         bool JoinRoom(std::string username,int roomid);
+        bool JoinRoom(std::string username,int roomid,Channel *channel);//don't forget delete[]
+        int GetSubscribedChannel(std::string username,Channel** channels,size_t max_len);
         bool LeaveRoom(std::string username,int roomid);
         bool LockRoom(std::string username,int roomid,bool unlock = false);
         bool SetPrivilege(std::string username,int roomid,int level);
@@ -88,6 +92,7 @@ class Database
 
         map<string,int> UsernameToIndentify;
         map<string,string> UsernameToToken;
+        map<int,Channel*> AliveChannel;
         constexpr static size_t BUFFER_SIZE = 512;
 
         struct userAlive
@@ -100,6 +105,11 @@ class Database
         userAlive* m_UserAlive;
         int* m_Livefd;
         int m_UserCount = 0;
+
+        bool JoinChannel(std::string username,int roomID);
+        bool JoinChannel(std::string username);
+        bool LeaveChannel(std::string username,int roomID);
+        bool TalkChannel(std::string username,std::string showname,std::string text,int roomID);
 
 };
 
