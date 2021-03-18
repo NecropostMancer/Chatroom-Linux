@@ -10,6 +10,7 @@ var usernameElement = document.querySelector('#username');
 var passwordElement = document.querySelector('#password');
 
 var regUsernameElement = document.querySelector('#username-new');
+var showNameElement = document.querySelector('#showname');
 var regPasswordElement = document.querySelector('#password-new');
 var vaildElement = document.querySelector('#password-new-re');
 
@@ -25,7 +26,7 @@ function OpenReg(){
 
 console.log(remote)
 
-const {LoginRequest ,RegisterRequest} = require('./request.js')
+const {LoginRequest ,RegisterRequest, StartClient} = require('./request.js')
 
 function login(){
     let username = usernameElement.value;
@@ -42,10 +43,13 @@ function login(){
 function register(){
     let username = regUsernameElement.value;
     let password = regPasswordElement.value;
-    RegisterRequest(username,password,"ChooseYourFighter!").then(()=>{
+    let showname = showNameElement.value;
+    RegisterRequest(username,password,showname).then(()=>{
         OpenLogin();
     }).catch((e)=>{
         console.log(e);
         OpenLogin();
     })
 }
+
+StartClient();
