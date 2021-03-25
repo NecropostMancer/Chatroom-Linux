@@ -19,6 +19,7 @@ PROTOBUF_PRAGMA_INIT_SEG
 constexpr RoomRequest::RoomRequest(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : username_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , payload_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
   , roomid_(0)
   , operation_(0)
 {}
@@ -49,7 +50,9 @@ struct RoomControlDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT RoomControlDefaultTypeInternal _RoomControl_default_instance_;
 constexpr RoomResponse::RoomResponse(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : error_(nullptr){}
+  : roomname_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , error_(nullptr)
+  , roomid_(0){}
 struct RoomResponseDefaultTypeInternal {
   constexpr RoomResponseDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -72,6 +75,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Room_2eproto::offsets[] PROTOB
   PROTOBUF_FIELD_OFFSET(::RoomRequest, roomid_),
   PROTOBUF_FIELD_OFFSET(::RoomRequest, username_),
   PROTOBUF_FIELD_OFFSET(::RoomRequest, operation_),
+  PROTOBUF_FIELD_OFFSET(::RoomRequest, payload_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::RoomControl, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -87,11 +91,13 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Room_2eproto::offsets[] PROTOB
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::RoomResponse, error_),
+  PROTOBUF_FIELD_OFFSET(::RoomResponse, roomid_),
+  PROTOBUF_FIELD_OFFSET(::RoomResponse, roomname_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::RoomRequest)},
-  { 8, -1, sizeof(::RoomControl)},
-  { 17, -1, sizeof(::RoomResponse)},
+  { 9, -1, sizeof(::RoomControl)},
+  { 18, -1, sizeof(::RoomResponse)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -101,23 +107,25 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 };
 
 const char descriptor_table_protodef_Room_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\nRoom.proto\032\013Error.proto\"\210\001\n\013RoomReques"
+  "\n\nRoom.proto\032\013Error.proto\"\244\001\n\013RoomReques"
   "t\022\016\n\006roomid\030\001 \001(\005\022\020\n\010username\030\002 \001(\t\022)\n\to"
-  "peration\030\003 \001(\0162\026.RoomRequest.Operation\","
-  "\n\tOperation\022\n\n\006CREATE\020\000\022\010\n\004JOIN\020\001\022\t\n\005LEA"
-  "VE\020\002\"\245\001\n\013RoomControl\022\016\n\006roomid\030\001 \001(\005\022\020\n\010"
-  "username\030\002 \001(\t\022)\n\toperation\030\003 \001(\0162\026.Room"
-  "Control.Operation\022\017\n\007payload\030\004 \001(\t\"8\n\tOp"
-  "eration\022\010\n\004LOCK\020\000\022\n\n\006UNLOCK\020\001\022\010\n\004MUTE\020\002\022"
-  "\013\n\007PROMOTE\020\003\"%\n\014RoomResponse\022\025\n\005error\030\001 "
-  "\001(\0132\006.Errorb\006proto3"
+  "peration\030\003 \001(\0162\026.RoomRequest.Operation\022\017"
+  "\n\007payload\030\004 \001(\t\"7\n\tOperation\022\n\n\006CREATE\020\000"
+  "\022\010\n\004JOIN\020\001\022\t\n\005LEAVE\020\002\022\t\n\005QUERY\020\003\"\245\001\n\013Roo"
+  "mControl\022\016\n\006roomid\030\001 \001(\005\022\020\n\010username\030\002 \001"
+  "(\t\022)\n\toperation\030\003 \001(\0162\026.RoomControl.Oper"
+  "ation\022\017\n\007payload\030\004 \001(\t\"8\n\tOperation\022\010\n\004L"
+  "OCK\020\000\022\n\n\006UNLOCK\020\001\022\010\n\004KICK\020\002\022\013\n\007PROMOTE\020\003"
+  "\"G\n\014RoomResponse\022\025\n\005error\030\001 \001(\0132\006.Error\022"
+  "\016\n\006roomid\030\002 \001(\005\022\020\n\010roomname\030\003 \001(\tb\006proto"
+  "3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Room_2eproto_deps[1] = {
   &::descriptor_table_Error_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Room_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Room_2eproto = {
-  false, false, 379, descriptor_table_protodef_Room_2eproto, "Room.proto", 
+  false, false, 441, descriptor_table_protodef_Room_2eproto, "Room.proto", 
   &descriptor_table_Room_2eproto_once, descriptor_table_Room_2eproto_deps, 1, 3,
   schemas, file_default_instances, TableStruct_Room_2eproto::offsets,
   file_level_metadata_Room_2eproto, file_level_enum_descriptors_Room_2eproto, file_level_service_descriptors_Room_2eproto,
@@ -139,6 +147,7 @@ bool RoomRequest_Operation_IsValid(int value) {
     case 0:
     case 1:
     case 2:
+    case 3:
       return true;
     default:
       return false;
@@ -149,6 +158,7 @@ bool RoomRequest_Operation_IsValid(int value) {
 constexpr RoomRequest_Operation RoomRequest::CREATE;
 constexpr RoomRequest_Operation RoomRequest::JOIN;
 constexpr RoomRequest_Operation RoomRequest::LEAVE;
+constexpr RoomRequest_Operation RoomRequest::QUERY;
 constexpr RoomRequest_Operation RoomRequest::Operation_MIN;
 constexpr RoomRequest_Operation RoomRequest::Operation_MAX;
 constexpr int RoomRequest::Operation_ARRAYSIZE;
@@ -172,7 +182,7 @@ bool RoomControl_Operation_IsValid(int value) {
 #if (__cplusplus < 201703) && (!defined(_MSC_VER) || _MSC_VER >= 1900)
 constexpr RoomControl_Operation RoomControl::LOCK;
 constexpr RoomControl_Operation RoomControl::UNLOCK;
-constexpr RoomControl_Operation RoomControl::MUTE;
+constexpr RoomControl_Operation RoomControl::KICK;
 constexpr RoomControl_Operation RoomControl::PROMOTE;
 constexpr RoomControl_Operation RoomControl::Operation_MIN;
 constexpr RoomControl_Operation RoomControl::Operation_MAX;
@@ -199,6 +209,11 @@ RoomRequest::RoomRequest(const RoomRequest& from)
     username_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_username(), 
       GetArena());
   }
+  payload_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_payload().empty()) {
+    payload_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_payload(), 
+      GetArena());
+  }
   ::memcpy(&roomid_, &from.roomid_,
     static_cast<size_t>(reinterpret_cast<char*>(&operation_) -
     reinterpret_cast<char*>(&roomid_)) + sizeof(operation_));
@@ -207,6 +222,7 @@ RoomRequest::RoomRequest(const RoomRequest& from)
 
 void RoomRequest::SharedCtor() {
 username_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+payload_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&roomid_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&operation_) -
@@ -222,6 +238,7 @@ RoomRequest::~RoomRequest() {
 void RoomRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArena() == nullptr);
   username_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  payload_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void RoomRequest::ArenaDtor(void* object) {
@@ -241,6 +258,7 @@ void RoomRequest::Clear() {
   (void) cached_has_bits;
 
   username_.ClearToEmpty();
+  payload_.ClearToEmpty();
   ::memset(&roomid_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&operation_) -
       reinterpret_cast<char*>(&roomid_)) + sizeof(operation_));
@@ -276,6 +294,15 @@ const char* RoomRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID
           ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_operation(static_cast<::RoomRequest_Operation>(val));
+        } else goto handle_unusual;
+        continue;
+      // string payload = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
+          auto str = _internal_mutable_payload();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "RoomRequest.payload"));
+          CHK_(ptr);
         } else goto handle_unusual;
         continue;
       default: {
@@ -329,6 +356,16 @@ failure:
       3, this->_internal_operation(), target);
   }
 
+  // string payload = 4;
+  if (this->payload().size() > 0) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_payload().data(), static_cast<int>(this->_internal_payload().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "RoomRequest.payload");
+    target = stream->WriteStringMaybeAliased(
+        4, this->_internal_payload(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -350,6 +387,13 @@ size_t RoomRequest::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
         this->_internal_username());
+  }
+
+  // string payload = 4;
+  if (this->payload().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_payload());
   }
 
   // int32 roomid = 1;
@@ -399,6 +443,9 @@ void RoomRequest::MergeFrom(const RoomRequest& from) {
   if (from.username().size() > 0) {
     _internal_set_username(from._internal_username());
   }
+  if (from.payload().size() > 0) {
+    _internal_set_payload(from._internal_payload());
+  }
   if (from.roomid() != 0) {
     _internal_set_roomid(from._internal_roomid());
   }
@@ -429,6 +476,7 @@ void RoomRequest::InternalSwap(RoomRequest* other) {
   using std::swap;
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
   username_.Swap(&other->username_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  payload_.Swap(&other->payload_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(RoomRequest, operation_)
       + sizeof(RoomRequest::operation_)
@@ -769,16 +817,26 @@ RoomResponse::RoomResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena)
 RoomResponse::RoomResponse(const RoomResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  roomname_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_roomname().empty()) {
+    roomname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_roomname(), 
+      GetArena());
+  }
   if (from._internal_has_error()) {
     error_ = new ::Error(*from.error_);
   } else {
     error_ = nullptr;
   }
+  roomid_ = from.roomid_;
   // @@protoc_insertion_point(copy_constructor:RoomResponse)
 }
 
 void RoomResponse::SharedCtor() {
-error_ = nullptr;
+roomname_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&error_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&roomid_) -
+    reinterpret_cast<char*>(&error_)) + sizeof(roomid_));
 }
 
 RoomResponse::~RoomResponse() {
@@ -789,6 +847,7 @@ RoomResponse::~RoomResponse() {
 
 void RoomResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArena() == nullptr);
+  roomname_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   if (this != internal_default_instance()) delete error_;
 }
 
@@ -808,10 +867,12 @@ void RoomResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  roomname_.ClearToEmpty();
   if (GetArena() == nullptr && error_ != nullptr) {
     delete error_;
   }
   error_ = nullptr;
+  roomid_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -826,6 +887,22 @@ const char* RoomResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_I
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
           ptr = ctx->ParseMessage(_internal_mutable_error(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // int32 roomid = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          roomid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // string roomname = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+          auto str = _internal_mutable_roomname();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "RoomResponse.roomname"));
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -865,6 +942,22 @@ failure:
         1, _Internal::error(this), target, stream);
   }
 
+  // int32 roomid = 2;
+  if (this->roomid() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_roomid(), target);
+  }
+
+  // string roomname = 3;
+  if (this->roomname().size() > 0) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_roomname().data(), static_cast<int>(this->_internal_roomname().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "RoomResponse.roomname");
+    target = stream->WriteStringMaybeAliased(
+        3, this->_internal_roomname(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -881,11 +974,25 @@ size_t RoomResponse::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  // string roomname = 3;
+  if (this->roomname().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_roomname());
+  }
+
   // .Error error = 1;
   if (this->has_error()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *error_);
+  }
+
+  // int32 roomid = 2;
+  if (this->roomid() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_roomid());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -919,8 +1026,14 @@ void RoomResponse::MergeFrom(const RoomResponse& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (from.roomname().size() > 0) {
+    _internal_set_roomname(from._internal_roomname());
+  }
   if (from.has_error()) {
     _internal_mutable_error()->::Error::MergeFrom(from._internal_error());
+  }
+  if (from.roomid() != 0) {
+    _internal_set_roomid(from._internal_roomid());
   }
 }
 
@@ -945,7 +1058,13 @@ bool RoomResponse::IsInitialized() const {
 void RoomResponse::InternalSwap(RoomResponse* other) {
   using std::swap;
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  swap(error_, other->error_);
+  roomname_.Swap(&other->roomname_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(RoomResponse, roomid_)
+      + sizeof(RoomResponse::roomid_)
+      - PROTOBUF_FIELD_OFFSET(RoomResponse, error_)>(
+          reinterpret_cast<char*>(&error_),
+          reinterpret_cast<char*>(&other->error_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata RoomResponse::GetMetadata() const {

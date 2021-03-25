@@ -23,11 +23,13 @@ class Database
         bool GetUserInRoom(int roomID, bool aliveOnly = true);
         int GetUserJoinedRoom(Room** Roooooom,std::string username, size_t len);//don't forget delete[]
         bool ModifyUserName(std::string username,std::string newname);
-        bool AddRoom(std::string roomname,User user);
+        int64_t AddRoom(std::string roomname,std::string username);
         int GetAllRoomByName(Room** Roooooom,std::string name, size_t len);//don't forget delete[]
         Room GetRoom(int roomID);
         bool JoinRoom(std::string username,int roomid);
-        bool JoinRoom(std::string username,int roomid,Channel *channel);//don't forget delete[]
+        Channel* JoinRoomC(std::string username,int roomid,int* error);//don't forget delete[]
+        bool UpdateRoom(std::string username,std::string newname,int roomid,bool lock);
+        bool KickUser(std::string username,std::string kicked,int roomid);
         int GetSubscribedChannel(std::string username,Channel** channels,size_t max_len);
         bool LeaveRoom(std::string username,int roomid);
         bool LockRoom(std::string username,int roomid,bool unlock = false);

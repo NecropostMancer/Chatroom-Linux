@@ -229,7 +229,7 @@
 	<google/protobuf/port_def.inc>
 	<google/protobuf/port_undef.inc>
 
-1616053764 source:/home/ghd/chatting-room-single/main.cpp
+1616641232 source:/home/ghd/chatting-room-single/main.cpp
 	<iostream>
 	"ThreadPool.h"
 	"Database.h"
@@ -247,7 +247,7 @@
 	"ServerWorker.h"
 	<unistd.h>
 
-1616062983 /home/ghd/chatting-room-single/include/ServerWorker.h
+1616589695 /home/ghd/chatting-room-single/include/ServerWorker.h
 	"ThreadPool.h"
 	"sys/uio.h"
 	<cstdlib>
@@ -272,7 +272,7 @@
 	<semaphore.h>
 	<exception>
 
-1616048424 /home/ghd/chatting-room-single/include/Database.h
+1616654097 /home/ghd/chatting-room-single/include/Database.h
 	<mysqlx/xapi.h>
 	<mutex>
 	<map>
@@ -286,12 +286,12 @@
 1614679371 /home/ghd/chatting-room-single/include/User.h
 	<string>
 
-1614681964 /home/ghd/chatting-room-single/include/Room.h
+1616639533 /home/ghd/chatting-room-single/include/Room.h
 	"User.h"
 
 1614762873 /home/ghd/chatting-room-single/include/Log.h
 
-1615962923 source:/home/ghd/chatting-room-single/protobuf/out/Chat.pb.cc
+1616581585 source:/home/ghd/chatting-room-single/protobuf/out/Chat.pb.cc
 	"Chat.pb.h"
 	<algorithm>
 	<google/protobuf/io/coded_stream.h>
@@ -304,7 +304,7 @@
 	<google/protobuf/port_def.inc>
 	<google/protobuf/port_undef.inc>
 
-1615962923 /home/ghd/chatting-room-single/protobuf/out/Chat.pb.h
+1616656752 /home/ghd/chatting-room-single/protobuf/out/Chat.pb.h
 	<limits>
 	<string>
 	<google/protobuf/port_def.inc>
@@ -324,7 +324,7 @@
 	<google/protobuf/port_def.inc>
 	<google/protobuf/port_undef.inc>
 
-1615962923 /home/ghd/chatting-room-single/protobuf/out/Error.pb.h
+1616656752 /home/ghd/chatting-room-single/protobuf/out/Error.pb.h
 	<limits>
 	<string>
 	<google/protobuf/port_def.inc>
@@ -344,7 +344,7 @@
 	<google/protobuf/port_def.inc>
 	<google/protobuf/port_undef.inc>
 
-1615962923 source:/home/ghd/chatting-room-single/protobuf/out/Error.pb.cc
+1616581585 source:/home/ghd/chatting-room-single/protobuf/out/Error.pb.cc
 	"Error.pb.h"
 	<algorithm>
 	<google/protobuf/io/coded_stream.h>
@@ -357,7 +357,7 @@
 	<google/protobuf/port_def.inc>
 	<google/protobuf/port_undef.inc>
 
-1615962923 source:/home/ghd/chatting-room-single/protobuf/out/Room.pb.cc
+1616581585 source:/home/ghd/chatting-room-single/protobuf/out/Room.pb.cc
 	"Room.pb.h"
 	<algorithm>
 	<google/protobuf/io/coded_stream.h>
@@ -370,7 +370,7 @@
 	<google/protobuf/port_def.inc>
 	<google/protobuf/port_undef.inc>
 
-1615962923 /home/ghd/chatting-room-single/protobuf/out/Room.pb.h
+1616656752 /home/ghd/chatting-room-single/protobuf/out/Room.pb.h
 	<limits>
 	<string>
 	<google/protobuf/port_def.inc>
@@ -391,7 +391,7 @@
 	<google/protobuf/port_def.inc>
 	<google/protobuf/port_undef.inc>
 
-1615962923 source:/home/ghd/chatting-room-single/protobuf/out/User.pb.cc
+1616581585 source:/home/ghd/chatting-room-single/protobuf/out/User.pb.cc
 	"User.pb.h"
 	<algorithm>
 	<google/protobuf/io/coded_stream.h>
@@ -404,7 +404,7 @@
 	<google/protobuf/port_def.inc>
 	<google/protobuf/port_undef.inc>
 
-1615962923 /home/ghd/chatting-room-single/protobuf/out/User.pb.h
+1616656752 /home/ghd/chatting-room-single/protobuf/out/User.pb.h
 	<limits>
 	<string>
 	<google/protobuf/port_def.inc>
@@ -435,7 +435,7 @@
 	"Log.h"
 	"ThreadPool.h"
 
-1616051748 source:/home/ghd/chatting-room-single/src/Database.cpp
+1616654218 source:/home/ghd/chatting-room-single/src/Database.cpp
 	"Database.h"
 	"Log.h"
 	"User.h"
@@ -460,7 +460,7 @@
 
 1613994046 /home/ghd/chatting-room-single/include/Server.h
 
-1616062672 source:/home/ghd/chatting-room-single/src/ServerWorker.cpp
+1616654248 source:/home/ghd/chatting-room-single/src/ServerWorker.cpp
 	"ServerWorker.h"
 	"Log.h"
 
@@ -482,7 +482,7 @@
 	<errno.h>
 	"ServerWorker.h"
 
-1616065430 source:/home/ghd/chatting-room-single/src/SingleThreadTCPServer.cpp
+1616568063 source:/home/ghd/chatting-room-single/src/SingleThreadTCPServer.cpp
 	"SingleThreadTCPServer.h"
 	"Log.h"
 	<iostream>
@@ -493,14 +493,15 @@
 1616039549 source:/home/ghd/chatting-room-single/src/Channel.cpp
 	"Channel.h"
 
-1616062713 /home/ghd/chatting-room-single/include/Channel.h
+1616643659 /home/ghd/chatting-room-single/include/Channel.h
 	"ServerWorkerInter.h"
 	<vector>
+	"Log.h"
 
 1615448322 source:/home/ghd/chatting-room-single/src/ChatLog.cpp
 	"ChatLog.h"
 
-1615962923 source:/home/ghd/chatting-room-single/protobuf/out/Wrapper.pb.cc
+1616581585 source:/home/ghd/chatting-room-single/protobuf/out/Wrapper.pb.cc
 	"Wrapper.pb.h"
 	<algorithm>
 	<google/protobuf/io/coded_stream.h>
@@ -513,7 +514,7 @@
 	<google/protobuf/port_def.inc>
 	<google/protobuf/port_undef.inc>
 
-1615962923 /home/ghd/chatting-room-single/protobuf/out/Wrapper.pb.h
+1616656752 /home/ghd/chatting-room-single/protobuf/out/Wrapper.pb.h
 	<limits>
 	<string>
 	<google/protobuf/port_def.inc>

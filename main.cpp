@@ -16,7 +16,7 @@ void testAllDB(Database &a)
     a.GetUser("1");
     a.GetUser("4");
 
-    a.AddRoom("blabla",User("1","1","1"));
+    a.AddRoom("blabla","1");
     Room* room[5] = {0,};
     a.GetAllRoomByName(room,"bla",5);
 

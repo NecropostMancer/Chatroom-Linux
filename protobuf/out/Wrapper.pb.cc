@@ -31,7 +31,8 @@ struct WrapperClientMessageDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT WrapperClientMessageDefaultTypeInternal _WrapperClientMessage_default_instance_;
 constexpr WrapperServerMessage::WrapperServerMessage(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : test_(0)
+  : rooms_()
+  , test_(0)
   , _oneof_case_{}{}
 struct WrapperServerMessageDefaultTypeInternal {
   constexpr WrapperServerMessageDefaultTypeInternal()
@@ -73,6 +74,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Wrapper_2eproto::offsets[] PRO
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
+  PROTOBUF_FIELD_OFFSET(::WrapperServerMessage, rooms_),
   PROTOBUF_FIELD_OFFSET(::WrapperServerMessage, msg_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
@@ -95,15 +97,15 @@ const char descriptor_table_protodef_Wrapper_2eproto[] PROTOBUF_SECTION_VARIABLE
   "\001(\0132\020.RegisterRequestH\000\022/\n\021changeNameReq"
   "uest\030\006 \001(\0132\022.ChangeNameRequestH\000\022#\n\013room"
   "Request\030\007 \001(\0132\014.RoomRequestH\000\022#\n\013roomCon"
-  "trol\030\010 \001(\0132\014.RoomControlH\000B\005\n\003msg\"\225\002\n\024Wr"
+  "trol\030\010 \001(\0132\014.RoomControlH\000B\005\n\003msg\"\263\002\n\024Wr"
   "apperServerMessage\022\014\n\004test\030\001 \001(\005\022%\n\014room"
   "Response\030\002 \001(\0132\r.RoomResponseH\000\022\027\n\005error"
   "\030\003 \001(\0132\006.ErrorH\000\022+\n\017chatMessageSend\030\004 \001("
   "\0132\020.ChatMessageSendH\000\022%\n\014chatResponse\030\005 "
   "\001(\0132\r.ChatResponseH\000\022\'\n\rloginResponse\030\006 "
   "\001(\0132\016.LoginResponseH\000\022+\n\017regularResponse"
-  "\030\007 \001(\0132\020.RegularResponseH\000B\005\n\003msgb\006proto"
-  "3"
+  "\030\007 \001(\0132\020.RegularResponseH\000\022\034\n\005rooms\030\010 \003("
+  "\0132\r.RoomResponseB\005\n\003msgb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Wrapper_2eproto_deps[4] = {
   &::descriptor_table_Chat_2eproto,
@@ -113,7 +115,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Wrapper_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Wrapper_2eproto = {
-  false, false, 681, descriptor_table_protodef_Wrapper_2eproto, "Wrapper.proto", 
+  false, false, 711, descriptor_table_protodef_Wrapper_2eproto, "Wrapper.proto", 
   &descriptor_table_Wrapper_2eproto_once, descriptor_table_Wrapper_2eproto_deps, 4, 2,
   schemas, file_default_instances, TableStruct_Wrapper_2eproto::offsets,
   file_level_metadata_Wrapper_2eproto, file_level_enum_descriptors_Wrapper_2eproto, file_level_service_descriptors_Wrapper_2eproto,
@@ -972,14 +974,19 @@ void WrapperServerMessage::clear_regularresponse() {
     clear_has_msg();
   }
 }
+void WrapperServerMessage::clear_rooms() {
+  rooms_.Clear();
+}
 WrapperServerMessage::WrapperServerMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena),
+  rooms_(arena) {
   SharedCtor();
   RegisterArenaDtor(arena);
   // @@protoc_insertion_point(arena_constructor:WrapperServerMessage)
 }
 WrapperServerMessage::WrapperServerMessage(const WrapperServerMessage& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      rooms_(from.rooms_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   test_ = from.test_;
   clear_has_msg();
@@ -1096,6 +1103,7 @@ void WrapperServerMessage::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  rooms_.Clear();
   test_ = 0;
   clear_msg();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
@@ -1155,6 +1163,18 @@ const char* WrapperServerMessage::_InternalParse(const char* ptr, ::PROTOBUF_NAM
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 58)) {
           ptr = ctx->ParseMessage(_internal_mutable_regularresponse(), ptr);
           CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // repeated .RoomResponse rooms = 8;
+      case 8:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 66)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_rooms(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<66>(ptr));
         } else goto handle_unusual;
         continue;
       default: {
@@ -1239,6 +1259,14 @@ failure:
         7, _Internal::regularresponse(this), target, stream);
   }
 
+  // repeated .RoomResponse rooms = 8;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->_internal_rooms_size()); i < n; i++) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(8, this->_internal_rooms(i), target, stream);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -1254,6 +1282,13 @@ size_t WrapperServerMessage::ByteSizeLong() const {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // repeated .RoomResponse rooms = 8;
+  total_size += 1UL * this->_internal_rooms_size();
+  for (const auto& msg : this->rooms_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
 
   // int32 test = 1;
   if (this->test() != 0) {
@@ -1340,6 +1375,7 @@ void WrapperServerMessage::MergeFrom(const WrapperServerMessage& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  rooms_.MergeFrom(from.rooms_);
   if (from.test() != 0) {
     _internal_set_test(from._internal_test());
   }
@@ -1395,6 +1431,7 @@ bool WrapperServerMessage::IsInitialized() const {
 void WrapperServerMessage::InternalSwap(WrapperServerMessage* other) {
   using std::swap;
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+  rooms_.InternalSwap(&other->rooms_);
   swap(test_, other->test_);
   swap(msg_, other->msg_);
   swap(_oneof_case_[0], other->_oneof_case_[0]);

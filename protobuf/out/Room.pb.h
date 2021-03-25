@@ -75,12 +75,13 @@ enum RoomRequest_Operation : int {
   RoomRequest_Operation_CREATE = 0,
   RoomRequest_Operation_JOIN = 1,
   RoomRequest_Operation_LEAVE = 2,
+  RoomRequest_Operation_QUERY = 3,
   RoomRequest_Operation_RoomRequest_Operation_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   RoomRequest_Operation_RoomRequest_Operation_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool RoomRequest_Operation_IsValid(int value);
 constexpr RoomRequest_Operation RoomRequest_Operation_Operation_MIN = RoomRequest_Operation_CREATE;
-constexpr RoomRequest_Operation RoomRequest_Operation_Operation_MAX = RoomRequest_Operation_LEAVE;
+constexpr RoomRequest_Operation RoomRequest_Operation_Operation_MAX = RoomRequest_Operation_QUERY;
 constexpr int RoomRequest_Operation_Operation_ARRAYSIZE = RoomRequest_Operation_Operation_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* RoomRequest_Operation_descriptor();
@@ -100,7 +101,7 @@ inline bool RoomRequest_Operation_Parse(
 enum RoomControl_Operation : int {
   RoomControl_Operation_LOCK = 0,
   RoomControl_Operation_UNLOCK = 1,
-  RoomControl_Operation_MUTE = 2,
+  RoomControl_Operation_KICK = 2,
   RoomControl_Operation_PROMOTE = 3,
   RoomControl_Operation_RoomControl_Operation_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   RoomControl_Operation_RoomControl_Operation_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
@@ -243,6 +244,8 @@ class RoomRequest PROTOBUF_FINAL :
     RoomRequest_Operation_JOIN;
   static constexpr Operation LEAVE =
     RoomRequest_Operation_LEAVE;
+  static constexpr Operation QUERY =
+    RoomRequest_Operation_QUERY;
   static inline bool Operation_IsValid(int value) {
     return RoomRequest_Operation_IsValid(value);
   }
@@ -272,6 +275,7 @@ class RoomRequest PROTOBUF_FINAL :
 
   enum : int {
     kUsernameFieldNumber = 2,
+    kPayloadFieldNumber = 4,
     kRoomidFieldNumber = 1,
     kOperationFieldNumber = 3,
   };
@@ -289,6 +293,22 @@ class RoomRequest PROTOBUF_FINAL :
   const std::string& _internal_username() const;
   void _internal_set_username(const std::string& value);
   std::string* _internal_mutable_username();
+  public:
+
+  // string payload = 4;
+  void clear_payload();
+  const std::string& payload() const;
+  void set_payload(const std::string& value);
+  void set_payload(std::string&& value);
+  void set_payload(const char* value);
+  void set_payload(const char* value, size_t size);
+  std::string* mutable_payload();
+  std::string* release_payload();
+  void set_allocated_payload(std::string* payload);
+  private:
+  const std::string& _internal_payload() const;
+  void _internal_set_payload(const std::string& value);
+  std::string* _internal_mutable_payload();
   public:
 
   // int32 roomid = 1;
@@ -317,6 +337,7 @@ class RoomRequest PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr username_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr payload_;
   ::PROTOBUF_NAMESPACE_ID::int32 roomid_;
   int operation_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -439,8 +460,8 @@ class RoomControl PROTOBUF_FINAL :
     RoomControl_Operation_LOCK;
   static constexpr Operation UNLOCK =
     RoomControl_Operation_UNLOCK;
-  static constexpr Operation MUTE =
-    RoomControl_Operation_MUTE;
+  static constexpr Operation KICK =
+    RoomControl_Operation_KICK;
   static constexpr Operation PROMOTE =
     RoomControl_Operation_PROMOTE;
   static inline bool Operation_IsValid(int value) {
@@ -655,8 +676,26 @@ class RoomResponse PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kRoomnameFieldNumber = 3,
     kErrorFieldNumber = 1,
+    kRoomidFieldNumber = 2,
   };
+  // string roomname = 3;
+  void clear_roomname();
+  const std::string& roomname() const;
+  void set_roomname(const std::string& value);
+  void set_roomname(std::string&& value);
+  void set_roomname(const char* value);
+  void set_roomname(const char* value, size_t size);
+  std::string* mutable_roomname();
+  std::string* release_roomname();
+  void set_allocated_roomname(std::string* roomname);
+  private:
+  const std::string& _internal_roomname() const;
+  void _internal_set_roomname(const std::string& value);
+  std::string* _internal_mutable_roomname();
+  public:
+
   // .Error error = 1;
   bool has_error() const;
   private:
@@ -675,6 +714,15 @@ class RoomResponse PROTOBUF_FINAL :
       ::Error* error);
   ::Error* unsafe_arena_release_error();
 
+  // int32 roomid = 2;
+  void clear_roomid();
+  ::PROTOBUF_NAMESPACE_ID::int32 roomid() const;
+  void set_roomid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_roomid() const;
+  void _internal_set_roomid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:RoomResponse)
  private:
   class _Internal;
@@ -682,7 +730,9 @@ class RoomResponse PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr roomname_;
   ::Error* error_;
+  ::PROTOBUF_NAMESPACE_ID::int32 roomid_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Room_2eproto;
 };
@@ -796,6 +846,67 @@ inline void RoomRequest::_internal_set_operation(::RoomRequest_Operation value) 
 inline void RoomRequest::set_operation(::RoomRequest_Operation value) {
   _internal_set_operation(value);
   // @@protoc_insertion_point(field_set:RoomRequest.operation)
+}
+
+// string payload = 4;
+inline void RoomRequest::clear_payload() {
+  payload_.ClearToEmpty();
+}
+inline const std::string& RoomRequest::payload() const {
+  // @@protoc_insertion_point(field_get:RoomRequest.payload)
+  return _internal_payload();
+}
+inline void RoomRequest::set_payload(const std::string& value) {
+  _internal_set_payload(value);
+  // @@protoc_insertion_point(field_set:RoomRequest.payload)
+}
+inline std::string* RoomRequest::mutable_payload() {
+  // @@protoc_insertion_point(field_mutable:RoomRequest.payload)
+  return _internal_mutable_payload();
+}
+inline const std::string& RoomRequest::_internal_payload() const {
+  return payload_.Get();
+}
+inline void RoomRequest::_internal_set_payload(const std::string& value) {
+  
+  payload_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void RoomRequest::set_payload(std::string&& value) {
+  
+  payload_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:RoomRequest.payload)
+}
+inline void RoomRequest::set_payload(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  payload_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:RoomRequest.payload)
+}
+inline void RoomRequest::set_payload(const char* value,
+    size_t size) {
+  
+  payload_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:RoomRequest.payload)
+}
+inline std::string* RoomRequest::_internal_mutable_payload() {
+  
+  return payload_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* RoomRequest::release_payload() {
+  // @@protoc_insertion_point(field_release:RoomRequest.payload)
+  return payload_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void RoomRequest::set_allocated_payload(std::string* payload) {
+  if (payload != nullptr) {
+    
+  } else {
+    
+  }
+  payload_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), payload,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:RoomRequest.payload)
 }
 
 // -------------------------------------------------------------------
@@ -1043,6 +1154,87 @@ inline void RoomResponse::set_allocated_error(::Error* error) {
   }
   error_ = error;
   // @@protoc_insertion_point(field_set_allocated:RoomResponse.error)
+}
+
+// int32 roomid = 2;
+inline void RoomResponse::clear_roomid() {
+  roomid_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 RoomResponse::_internal_roomid() const {
+  return roomid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 RoomResponse::roomid() const {
+  // @@protoc_insertion_point(field_get:RoomResponse.roomid)
+  return _internal_roomid();
+}
+inline void RoomResponse::_internal_set_roomid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  roomid_ = value;
+}
+inline void RoomResponse::set_roomid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_roomid(value);
+  // @@protoc_insertion_point(field_set:RoomResponse.roomid)
+}
+
+// string roomname = 3;
+inline void RoomResponse::clear_roomname() {
+  roomname_.ClearToEmpty();
+}
+inline const std::string& RoomResponse::roomname() const {
+  // @@protoc_insertion_point(field_get:RoomResponse.roomname)
+  return _internal_roomname();
+}
+inline void RoomResponse::set_roomname(const std::string& value) {
+  _internal_set_roomname(value);
+  // @@protoc_insertion_point(field_set:RoomResponse.roomname)
+}
+inline std::string* RoomResponse::mutable_roomname() {
+  // @@protoc_insertion_point(field_mutable:RoomResponse.roomname)
+  return _internal_mutable_roomname();
+}
+inline const std::string& RoomResponse::_internal_roomname() const {
+  return roomname_.Get();
+}
+inline void RoomResponse::_internal_set_roomname(const std::string& value) {
+  
+  roomname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void RoomResponse::set_roomname(std::string&& value) {
+  
+  roomname_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:RoomResponse.roomname)
+}
+inline void RoomResponse::set_roomname(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  roomname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:RoomResponse.roomname)
+}
+inline void RoomResponse::set_roomname(const char* value,
+    size_t size) {
+  
+  roomname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:RoomResponse.roomname)
+}
+inline std::string* RoomResponse::_internal_mutable_roomname() {
+  
+  return roomname_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* RoomResponse::release_roomname() {
+  // @@protoc_insertion_point(field_release:RoomResponse.roomname)
+  return roomname_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void RoomResponse::set_allocated_roomname(std::string* roomname) {
+  if (roomname != nullptr) {
+    
+  } else {
+    
+  }
+  roomname_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), roomname,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:RoomResponse.roomname)
 }
 
 #ifdef __GNUC__

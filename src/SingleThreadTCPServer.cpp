@@ -95,7 +95,7 @@ int SingleThreadTCPServer::Start()
                 int connfd = events[i].data.fd;
                 memset(m_TmpBuffer,0,BUFFER_SIZE);
                 int recvNum = recv(connfd, m_TmpBuffer,BUFFER_SIZE-1,0);
-                //Log::Debug("Get %d length data.",recvNum,m_TmpBuffer);
+                Log::Debug("TCPServer : Get %d length data.",recvNum,m_TmpBuffer);
                 Modfd(epollfd,connfd,EPOLLIN);
                 if(ret < 0)
                 {
@@ -113,7 +113,7 @@ int SingleThreadTCPServer::Start()
                     //send right after the processing end,
                     //so i decided not to enable epollout manually.
                     //Modfd(epollfd,livefd[j],EPOLLOUT);
-                    m_Workers[connfd].process(m_TmpBuffer);
+                    m_Workers[connfd].process(m_TmpBuffer,recvNum);
                 }
             }
             else if (events[i].events & EPOLLOUT)

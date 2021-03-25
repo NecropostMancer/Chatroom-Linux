@@ -36,8 +36,10 @@ constexpr ChatMessageSend::ChatMessageSend(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : username_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
   , msg_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , showname_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
   , roomid_(0)
-  , roomorder_(0){}
+  , roomorder_(0)
+  , type_(0){}
 struct ChatMessageSendDefaultTypeInternal {
   constexpr ChatMessageSendDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -83,6 +85,8 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Chat_2eproto::offsets[] PROTOB
   PROTOBUF_FIELD_OFFSET(::ChatMessageSend, msg_),
   PROTOBUF_FIELD_OFFSET(::ChatMessageSend, roomid_),
   PROTOBUF_FIELD_OFFSET(::ChatMessageSend, roomorder_),
+  PROTOBUF_FIELD_OFFSET(::ChatMessageSend, showname_),
+  PROTOBUF_FIELD_OFFSET(::ChatMessageSend, type_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::ChatResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -93,7 +97,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Chat_2eproto::offsets[] PROTOB
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::ChatMessageRequest)},
   { 10, -1, sizeof(::ChatMessageSend)},
-  { 19, -1, sizeof(::ChatResponse)},
+  { 21, -1, sizeof(::ChatResponse)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -106,17 +110,18 @@ const char descriptor_table_protodef_Chat_2eproto[] PROTOBUF_SECTION_VARIABLE(pr
   "\n\nChat.proto\032\013Error.proto\"b\n\022ChatMessage"
   "Request\022\020\n\010username\030\001 \001(\t\022\r\n\005token\030\002 \001(\t"
   "\022\013\n\003msg\030\003 \001(\t\022\016\n\006roomid\030\004 \001(\005\022\016\n\006random\030"
-  "\005 \001(\t\"S\n\017ChatMessageSend\022\020\n\010username\030\001 \001"
+  "\005 \001(\t\"s\n\017ChatMessageSend\022\020\n\010username\030\001 \001"
   "(\t\022\013\n\003msg\030\002 \001(\t\022\016\n\006roomid\030\003 \001(\005\022\021\n\troomo"
-  "rder\030\004 \001(\005\"%\n\014ChatResponse\022\025\n\005error\030\001 \001("
-  "\0132\006.Errorb\006proto3"
+  "rder\030\004 \001(\005\022\020\n\010showname\030\005 \001(\t\022\014\n\004type\030\006 \001"
+  "(\005\"%\n\014ChatResponse\022\025\n\005error\030\001 \001(\0132\006.Erro"
+  "rb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Chat_2eproto_deps[1] = {
   &::descriptor_table_Error_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Chat_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Chat_2eproto = {
-  false, false, 257, descriptor_table_protodef_Chat_2eproto, "Chat.proto", 
+  false, false, 289, descriptor_table_protodef_Chat_2eproto, "Chat.proto", 
   &descriptor_table_Chat_2eproto_once, descriptor_table_Chat_2eproto_deps, 1, 3,
   schemas, file_default_instances, TableStruct_Chat_2eproto::offsets,
   file_level_metadata_Chat_2eproto, file_level_enum_descriptors_Chat_2eproto, file_level_service_descriptors_Chat_2eproto,
@@ -496,19 +501,25 @@ ChatMessageSend::ChatMessageSend(const ChatMessageSend& from)
     msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_msg(), 
       GetArena());
   }
+  showname_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_showname().empty()) {
+    showname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_showname(), 
+      GetArena());
+  }
   ::memcpy(&roomid_, &from.roomid_,
-    static_cast<size_t>(reinterpret_cast<char*>(&roomorder_) -
-    reinterpret_cast<char*>(&roomid_)) + sizeof(roomorder_));
+    static_cast<size_t>(reinterpret_cast<char*>(&type_) -
+    reinterpret_cast<char*>(&roomid_)) + sizeof(type_));
   // @@protoc_insertion_point(copy_constructor:ChatMessageSend)
 }
 
 void ChatMessageSend::SharedCtor() {
 username_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 msg_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+showname_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&roomid_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&roomorder_) -
-    reinterpret_cast<char*>(&roomid_)) + sizeof(roomorder_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&type_) -
+    reinterpret_cast<char*>(&roomid_)) + sizeof(type_));
 }
 
 ChatMessageSend::~ChatMessageSend() {
@@ -521,6 +532,7 @@ void ChatMessageSend::SharedDtor() {
   GOOGLE_DCHECK(GetArena() == nullptr);
   username_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   msg_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  showname_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void ChatMessageSend::ArenaDtor(void* object) {
@@ -541,9 +553,10 @@ void ChatMessageSend::Clear() {
 
   username_.ClearToEmpty();
   msg_.ClearToEmpty();
+  showname_.ClearToEmpty();
   ::memset(&roomid_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&roomorder_) -
-      reinterpret_cast<char*>(&roomid_)) + sizeof(roomorder_));
+      reinterpret_cast<char*>(&type_) -
+      reinterpret_cast<char*>(&roomid_)) + sizeof(type_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -583,6 +596,22 @@ const char* ChatMessageSend::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
           roomorder_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // string showname = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
+          auto str = _internal_mutable_showname();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "ChatMessageSend.showname"));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // int32 type = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 48)) {
+          type_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -646,6 +675,22 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(4, this->_internal_roomorder(), target);
   }
 
+  // string showname = 5;
+  if (this->showname().size() > 0) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_showname().data(), static_cast<int>(this->_internal_showname().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "ChatMessageSend.showname");
+    target = stream->WriteStringMaybeAliased(
+        5, this->_internal_showname(), target);
+  }
+
+  // int32 type = 6;
+  if (this->type() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(6, this->_internal_type(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -676,6 +721,13 @@ size_t ChatMessageSend::ByteSizeLong() const {
         this->_internal_msg());
   }
 
+  // string showname = 5;
+  if (this->showname().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_showname());
+  }
+
   // int32 roomid = 3;
   if (this->roomid() != 0) {
     total_size += 1 +
@@ -688,6 +740,13 @@ size_t ChatMessageSend::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_roomorder());
+  }
+
+  // int32 type = 6;
+  if (this->type() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_type());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -727,11 +786,17 @@ void ChatMessageSend::MergeFrom(const ChatMessageSend& from) {
   if (from.msg().size() > 0) {
     _internal_set_msg(from._internal_msg());
   }
+  if (from.showname().size() > 0) {
+    _internal_set_showname(from._internal_showname());
+  }
   if (from.roomid() != 0) {
     _internal_set_roomid(from._internal_roomid());
   }
   if (from.roomorder() != 0) {
     _internal_set_roomorder(from._internal_roomorder());
+  }
+  if (from.type() != 0) {
+    _internal_set_type(from._internal_type());
   }
 }
 
@@ -758,9 +823,10 @@ void ChatMessageSend::InternalSwap(ChatMessageSend* other) {
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
   username_.Swap(&other->username_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
   msg_.Swap(&other->msg_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  showname_.Swap(&other->showname_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(ChatMessageSend, roomorder_)
-      + sizeof(ChatMessageSend::roomorder_)
+      PROTOBUF_FIELD_OFFSET(ChatMessageSend, type_)
+      + sizeof(ChatMessageSend::type_)
       - PROTOBUF_FIELD_OFFSET(ChatMessageSend, roomid_)>(
           reinterpret_cast<char*>(&roomid_),
           reinterpret_cast<char*>(&other->roomid_));

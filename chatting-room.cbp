@@ -34,6 +34,7 @@
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
 			<Add option="-fexceptions" />
+			<Add directory="protobuf/out" />
 		</Compiler>
 		<Linker>
 			<Add directory="../../../usr/local/mysql/connector-c++-/lib64/debug" />
@@ -60,6 +61,8 @@
 		<Unit filename="protobuf/out/Room.pb.h" />
 		<Unit filename="protobuf/out/User.pb.cc" />
 		<Unit filename="protobuf/out/User.pb.h" />
+		<Unit filename="protobuf/out/Wrapper.pb.cc" />
+		<Unit filename="protobuf/out/Wrapper.pb.h" />
 		<Unit filename="src/Channel.cpp" />
 		<Unit filename="src/ChatLog.cpp" />
 		<Unit filename="src/Database.cpp" />

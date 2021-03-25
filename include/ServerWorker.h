@@ -25,7 +25,7 @@ class ServerWorker : public IServerWorker
     public:
         ServerWorker();
         virtual ~ServerWorker();
-        void process(const char*);
+        void process(const char*,int);
         void Init(int sockfd,sockaddr_in addr){
             m_Sockfd = sockfd;
             m_Address = addr;
@@ -40,8 +40,9 @@ class ServerWorker : public IServerWorker
         }
         virtual void Res(const char* raw,int max_len)
         {
+            //m_Out = raw;
             int cnt = write(m_Sockfd,raw,max_len);
-            //Log::Debug("Write %d bytes.",cnt);
+            Log::Debug("Write %d bytes.",cnt);
         }
         void ConnectDb(Database &database)
         {
@@ -52,26 +53,31 @@ class ServerWorker : public IServerWorker
 
     private:
 
-        bool ParseMessage();
+        bool ParseMessage(int len);
         bool PostResponse(int len);
 
         bool Register(RegisterRequest);
 
         bool Login(LoginRequest);
         bool Logout();
-        bool ChangeName();
+        bool ChangeName(ChangeNameRequest);
 
-        bool JoinRoom(RoomRequest req);
-        bool leaveRoom();
-        bool CreateRoom();
+        bool RoomReq(RoomRequest);
+        bool JoinRoom(int roomid);
+        bool JoinRoomSub(int roomid,bool doResponse);
+        bool leaveRoom(int roomid);
+        bool CreateRoom(std::string name);
 
-        bool LockRoom();
-        bool KickUser();
-        bool PromoteUser();
+        bool DoRoomControl(RoomControl);
+        bool LockRoom(int roomid,bool operation);
+        bool KickUser(int roomid,std::string username);
+        bool PromoteUser(int roomid,std::string username,int toLevel);
 
         bool Chat(ChatMessageRequest req);
-
+        bool SendNotice(int type,int roomid,std::string paraA,std::string paraB);
         void InitChattingState();
+
+        bool GetAllRooms();
 
         iovec m_iv[2];
         int m_ivCnt;
@@ -84,7 +90,7 @@ class ServerWorker : public IServerWorker
 
         std::map<int,Channel*>* m_MyChannel;
         std::string m_userName;
-
+        std::string m_ShowName;
 };
 
 #endif // SERVERWORKER_H

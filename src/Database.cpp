@@ -186,32 +186,50 @@ bool Database::ModifyUserName(std::string username,std::string newname)
     return true;
 }
 
-bool Database::AddRoom(std::string roomname,User user)
+int64_t Database::AddRoom(std::string roomname,std::string username)
 {
     std::lock_guard<std::mutex> lock(m_WorkLock);
     crud = mysqlx_sql_new(sess,
                          "INSERT INTO db.room " \
                          "(creator,name,state) VALUES (?,?,0)",
                          MYSQLX_NULL_TERMINATED);
-    int rc = mysqlx_stmt_bind(crud, PARAM_STRING(user.m_UserName.c_str()),
+    int rc = mysqlx_stmt_bind(crud, PARAM_STRING(username.c_str()),
                                     PARAM_STRING(roomname.c_str()),
                                     PARAM_END);
     if(rc != RESULT_OK)
     {
         Log::Error("add room bind failed.");
-        return false;
+        return -1;
     }
     res = mysqlx_execute(crud);
 
     RESULT_CHECK(res,crud);
-    return true;
+
+    crud = mysqlx_sql_new(sess,
+                         "SELECT roomID from db.room " \
+                         "WHERE creator = ? AND name = ?",
+                         MYSQLX_NULL_TERMINATED);
+    rc = mysqlx_stmt_bind(crud, PARAM_STRING(username.c_str()),
+                                    PARAM_STRING(roomname.c_str()),
+                                    PARAM_END);
+    res = mysqlx_execute(crud);
+
+    if((row = mysqlx_row_fetch_one(res)))
+    {
+        int64_t ID = -1;
+        mysqlx_get_sint(row,0,&ID);
+        return ID;
+
+    }
+    return -1;
 
 }
 int Database::GetUserJoinedRoom(Room** Roooooom,std::string username, size_t len)
 {
     std::lock_guard<std::mutex> lock(m_WorkLock);
     crud = mysqlx_sql_new(sess,
-                          "SELECT roomID from `userInRoom`" \
+                          "SELECT r.roomID, u.name, u.creator from `userInRoom` r INNER JOIN `room` u " \
+                          "ON r.roomID = u.roomID "
                           "WHERE username = ?" ,
                           MYSQLX_NULL_TERMINATED);// todo:escape % : stackoverflow:how-can-i-with-mysqli-make-a-query-with-like-and-get-all-results
     int rc = mysqlx_stmt_bind(crud, PARAM_STRING(username.c_str()),
@@ -239,6 +257,10 @@ int Database::GetUserJoinedRoom(Room** Roooooom,std::string username, size_t len
         long int tmp2;
         mysqlx_get_sint(row,0,&tmp2);
         room->m_roomID = static_cast<int>(tmp2);
+        mysqlx_get_bytes(row,1,0,tmp,&len);
+        room->m_Name = tmp;
+        mysqlx_get_bytes(row,2,0,tmp,&len);
+        room->m_Creator = tmp;
         Roooooom[i] = room;
         i++;
         if(i > len){
@@ -296,7 +318,7 @@ Room Database::GetRoom(int roomID)
 {
     std::lock_guard<std::mutex> lock(m_WorkLock);
     crud = mysqlx_sql_new(sess,
-                          "SELECT r.roomID, r.creator, r.name, r.id, u.showname FROM `room` r INNER JOIN `user` u " \
+                          "SELECT r.roomID, r.creator, r.name, r.id,r.state, u.showname FROM `room` r INNER JOIN `user` u " \
                           "ON r.creator = u.username" \
                           "WHERE roomID = ?",
                           MYSQLX_NULL_TERMINATED);
@@ -321,13 +343,24 @@ Room Database::GetRoom(int roomID)
         room.m_Creator = tmp;//todo:
         mysqlx_get_bytes(row,2,0,tmp,&len);
         room.m_Name = tmp;
+        int64_t re;
+        mysqlx_get_sint(row,4,&re);
+        room.m_Lock = re;
     }
     return room;
 }
 //both
-bool Database::JoinRoom(std::string username,int roomid,Channel* channel)
+Channel* Database::JoinRoomC(std::string username,int roomid,int* error)
 {
     std::lock_guard<std::mutex> lock(m_WorkLock);
+
+    Room room = GetRoom(roomid);
+    if(room.m_Lock != 0)
+    {
+        *error = -1;
+        return nullptr;
+    }
+
     crud = mysqlx_sql_new(sess,
                          "INSERT INTO db.userInRoom " \
                          "(username,roomID,privilege) VALUES (?,?,?)",
@@ -339,12 +372,13 @@ bool Database::JoinRoom(std::string username,int roomid,Channel* channel)
     if(rc != RESULT_OK)
     {
         Log::Error("join room bind failed.");
-        return false;
+        *error = 0;
+        return nullptr;
     }
     res = mysqlx_execute(crud);
 
     RESULT_CHECK(res,crud);
-
+    Channel* channel = nullptr;
     if(AliveChannel.find(roomid) == AliveChannel.end()){
         channel = new Channel(roomid);
         AliveChannel.insert(std::pair<int,Channel*>(roomid,channel));
@@ -352,7 +386,7 @@ bool Database::JoinRoom(std::string username,int roomid,Channel* channel)
     else{
         channel = (*AliveChannel.find(roomid)).second;
     }
-    return true;
+    return channel;
 }
 
 bool Database::JoinRoom(std::string username,int roomid)
@@ -420,7 +454,34 @@ bool Database::LeaveRoom(std::string username,int roomid)
     RESULT_CHECK(res,crud);
     return true;
 }
+bool Database::UpdateRoom(std::string username,std::string newname,int roomid,bool lock)
+{
+    Room room = GetRoom(roomid);
 
+    if(room.m_Creator == username)
+    {
+        if(newname == "")newname = room.m_Name;
+        int state = lock? 1:0;
+        crud = mysqlx_sql_new(sess,
+                          "UPDATE `room` " \
+                          "SET name = ? , state = ?" \
+                          "WHERE roomID = ?",
+                          MYSQLX_NULL_TERMINATED);
+        int rc = mysqlx_stmt_bind(crud, PARAM_STRING(newname.c_str()),
+                                        PARAM_SINT(state),
+                                        PARAM_STRING(username.c_str()),
+                                        PARAM_END);
+        User user;
+        if(rc != RESULT_OK)
+        {
+            Log::Error("update room bind failed.");
+            return false;
+        }
+        res = mysqlx_execute(crud);
+
+        RESULT_CHECK(res,crud);
+    }
+}
 bool Database::SetPrivilege(std::string username,int roomid,int level)
 {
 

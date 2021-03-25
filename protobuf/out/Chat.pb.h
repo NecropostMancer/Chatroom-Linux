@@ -396,8 +396,10 @@ class ChatMessageSend PROTOBUF_FINAL :
   enum : int {
     kUsernameFieldNumber = 1,
     kMsgFieldNumber = 2,
+    kShownameFieldNumber = 5,
     kRoomidFieldNumber = 3,
     kRoomorderFieldNumber = 4,
+    kTypeFieldNumber = 6,
   };
   // string username = 1;
   void clear_username();
@@ -431,6 +433,22 @@ class ChatMessageSend PROTOBUF_FINAL :
   std::string* _internal_mutable_msg();
   public:
 
+  // string showname = 5;
+  void clear_showname();
+  const std::string& showname() const;
+  void set_showname(const std::string& value);
+  void set_showname(std::string&& value);
+  void set_showname(const char* value);
+  void set_showname(const char* value, size_t size);
+  std::string* mutable_showname();
+  std::string* release_showname();
+  void set_allocated_showname(std::string* showname);
+  private:
+  const std::string& _internal_showname() const;
+  void _internal_set_showname(const std::string& value);
+  std::string* _internal_mutable_showname();
+  public:
+
   // int32 roomid = 3;
   void clear_roomid();
   ::PROTOBUF_NAMESPACE_ID::int32 roomid() const;
@@ -449,6 +467,15 @@ class ChatMessageSend PROTOBUF_FINAL :
   void _internal_set_roomorder(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
+  // int32 type = 6;
+  void clear_type();
+  ::PROTOBUF_NAMESPACE_ID::int32 type() const;
+  void set_type(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_type() const;
+  void _internal_set_type(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:ChatMessageSend)
  private:
   class _Internal;
@@ -458,8 +485,10 @@ class ChatMessageSend PROTOBUF_FINAL :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr username_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr msg_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr showname_;
   ::PROTOBUF_NAMESPACE_ID::int32 roomid_;
   ::PROTOBUF_NAMESPACE_ID::int32 roomorder_;
+  ::PROTOBUF_NAMESPACE_ID::int32 type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Chat_2eproto;
 };
@@ -1048,6 +1077,87 @@ inline void ChatMessageSend::_internal_set_roomorder(::PROTOBUF_NAMESPACE_ID::in
 inline void ChatMessageSend::set_roomorder(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_roomorder(value);
   // @@protoc_insertion_point(field_set:ChatMessageSend.roomorder)
+}
+
+// string showname = 5;
+inline void ChatMessageSend::clear_showname() {
+  showname_.ClearToEmpty();
+}
+inline const std::string& ChatMessageSend::showname() const {
+  // @@protoc_insertion_point(field_get:ChatMessageSend.showname)
+  return _internal_showname();
+}
+inline void ChatMessageSend::set_showname(const std::string& value) {
+  _internal_set_showname(value);
+  // @@protoc_insertion_point(field_set:ChatMessageSend.showname)
+}
+inline std::string* ChatMessageSend::mutable_showname() {
+  // @@protoc_insertion_point(field_mutable:ChatMessageSend.showname)
+  return _internal_mutable_showname();
+}
+inline const std::string& ChatMessageSend::_internal_showname() const {
+  return showname_.Get();
+}
+inline void ChatMessageSend::_internal_set_showname(const std::string& value) {
+  
+  showname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void ChatMessageSend::set_showname(std::string&& value) {
+  
+  showname_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:ChatMessageSend.showname)
+}
+inline void ChatMessageSend::set_showname(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  showname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:ChatMessageSend.showname)
+}
+inline void ChatMessageSend::set_showname(const char* value,
+    size_t size) {
+  
+  showname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:ChatMessageSend.showname)
+}
+inline std::string* ChatMessageSend::_internal_mutable_showname() {
+  
+  return showname_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* ChatMessageSend::release_showname() {
+  // @@protoc_insertion_point(field_release:ChatMessageSend.showname)
+  return showname_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void ChatMessageSend::set_allocated_showname(std::string* showname) {
+  if (showname != nullptr) {
+    
+  } else {
+    
+  }
+  showname_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), showname,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:ChatMessageSend.showname)
+}
+
+// int32 type = 6;
+inline void ChatMessageSend::clear_type() {
+  type_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 ChatMessageSend::_internal_type() const {
+  return type_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 ChatMessageSend::type() const {
+  // @@protoc_insertion_point(field_get:ChatMessageSend.type)
+  return _internal_type();
+}
+inline void ChatMessageSend::_internal_set_type(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  type_ = value;
+}
+inline void ChatMessageSend::set_type(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_type(value);
+  // @@protoc_insertion_point(field_set:ChatMessageSend.type)
 }
 
 // -------------------------------------------------------------------

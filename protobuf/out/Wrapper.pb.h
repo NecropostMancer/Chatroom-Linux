@@ -500,6 +500,7 @@ class WrapperServerMessage PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kRoomsFieldNumber = 8,
     kTestFieldNumber = 1,
     kRoomResponseFieldNumber = 2,
     kErrorFieldNumber = 3,
@@ -508,6 +509,24 @@ class WrapperServerMessage PROTOBUF_FINAL :
     kLoginResponseFieldNumber = 6,
     kRegularResponseFieldNumber = 7,
   };
+  // repeated .RoomResponse rooms = 8;
+  int rooms_size() const;
+  private:
+  int _internal_rooms_size() const;
+  public:
+  void clear_rooms();
+  ::RoomResponse* mutable_rooms(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::RoomResponse >*
+      mutable_rooms();
+  private:
+  const ::RoomResponse& _internal_rooms(int index) const;
+  ::RoomResponse* _internal_add_rooms();
+  public:
+  const ::RoomResponse& rooms(int index) const;
+  ::RoomResponse* add_rooms();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::RoomResponse >&
+      rooms() const;
+
   // int32 test = 1;
   void clear_test();
   ::PROTOBUF_NAMESPACE_ID::int32 test() const;
@@ -643,6 +662,7 @@ class WrapperServerMessage PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::RoomResponse > rooms_;
   ::PROTOBUF_NAMESPACE_ID::int32 test_;
   union MsgUnion {
     constexpr MsgUnion() : _constinit_{} {}
@@ -1566,6 +1586,42 @@ inline ::RegularResponse* WrapperServerMessage::_internal_mutable_regularrespons
 inline ::RegularResponse* WrapperServerMessage::mutable_regularresponse() {
   // @@protoc_insertion_point(field_mutable:WrapperServerMessage.regularResponse)
   return _internal_mutable_regularresponse();
+}
+
+// repeated .RoomResponse rooms = 8;
+inline int WrapperServerMessage::_internal_rooms_size() const {
+  return rooms_.size();
+}
+inline int WrapperServerMessage::rooms_size() const {
+  return _internal_rooms_size();
+}
+inline ::RoomResponse* WrapperServerMessage::mutable_rooms(int index) {
+  // @@protoc_insertion_point(field_mutable:WrapperServerMessage.rooms)
+  return rooms_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::RoomResponse >*
+WrapperServerMessage::mutable_rooms() {
+  // @@protoc_insertion_point(field_mutable_list:WrapperServerMessage.rooms)
+  return &rooms_;
+}
+inline const ::RoomResponse& WrapperServerMessage::_internal_rooms(int index) const {
+  return rooms_.Get(index);
+}
+inline const ::RoomResponse& WrapperServerMessage::rooms(int index) const {
+  // @@protoc_insertion_point(field_get:WrapperServerMessage.rooms)
+  return _internal_rooms(index);
+}
+inline ::RoomResponse* WrapperServerMessage::_internal_add_rooms() {
+  return rooms_.Add();
+}
+inline ::RoomResponse* WrapperServerMessage::add_rooms() {
+  // @@protoc_insertion_point(field_add:WrapperServerMessage.rooms)
+  return _internal_add_rooms();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::RoomResponse >&
+WrapperServerMessage::rooms() const {
+  // @@protoc_insertion_point(field_list:WrapperServerMessage.rooms)
+  return rooms_;
 }
 
 inline bool WrapperServerMessage::has_msg() const {
