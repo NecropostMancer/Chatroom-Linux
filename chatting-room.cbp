@@ -49,6 +49,7 @@
 		<Unit filename="include/Room.h" />
 		<Unit filename="include/Server.h" />
 		<Unit filename="include/ServerWorker.h" />
+		<Unit filename="include/ServerWorkerInter.h" />
 		<Unit filename="include/SingleThreadTCPServer.h" />
 		<Unit filename="include/ThreadPool.h" />
 		<Unit filename="include/User.h" />

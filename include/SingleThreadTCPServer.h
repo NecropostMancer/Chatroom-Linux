@@ -1,3 +1,10 @@
+/****************************************
+
+监听网络请求，事务由serverworker处理
+
+****************************************/
+
+
 #ifndef SINGLETHREADTCPSERVER_H
 #define SINGLETHREADTCPSERVER_H
 

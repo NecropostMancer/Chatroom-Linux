@@ -1,3 +1,12 @@
+/****************************************
+
+聊天频道，也就是被载入到内存的room，worker
+通过将自己登记入相对应的channel交流
+
+****************************************/
+
+
+
 #ifndef CHANNEL_H
 #define CHANNEL_H
 #include "ServerWorkerInter.h"

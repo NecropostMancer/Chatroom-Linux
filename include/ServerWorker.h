@@ -1,3 +1,11 @@
+/****************************************
+
+定义所有业务逻辑和必要数据结构
+和套接字及文件描述符一对一
+
+****************************************/
+
+
 #ifndef SERVERWORKER_H
 #define SERVERWORKER_H
 
@@ -38,7 +46,7 @@ class ServerWorker : public IServerWorker
             Logout();
             delete m_MyChannel;
         }
-        virtual void Res(const char* raw,int max_len)
+        virtual void Res(const char* raw,int max_len)//给channel发送聊天消息用
         {
             //m_Out = raw;
             int cnt = write(m_Sockfd,raw,max_len);

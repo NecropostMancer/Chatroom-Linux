@@ -28,7 +28,7 @@ Database::Database()
 
     }*/
     //sess = new Session("mysqlx://user:1234@127.0.0.1:3306/db?ssl-mode=disabled");
-#define DROP
+#define DROP // 初始化自动删库
 
 
 
@@ -107,7 +107,13 @@ Database::~Database()
     delete []m_UserAlive;
     delete []m_Livefd;
 }
-
+/*
+ * @brief 添加用户
+ * @param user 用户:User
+ * @param
+ *
+ * @return true = 成功
+*/
 bool Database::AddUser(User user)
 {
     std::lock_guard<std::mutex> lock(m_WorkLock);
@@ -129,7 +135,13 @@ bool Database::AddUser(User user)
     RESULT_CHECK(res,crud);
     return true;
 }
-
+/*
+ * @brief 查询用户
+ * @param username 用户名:字符串
+ * @param
+ *
+ * @return true = 成功
+*/
 User Database::GetUser(std::string username)
 {
     std::lock_guard<std::mutex> lock(m_WorkLock);
@@ -162,7 +174,13 @@ User Database::GetUser(std::string username)
     }
     return user;
 }
-
+/*
+ * @brief 修改用户名
+ * @param username 用户名:string
+ * @param newname 新名字:string
+ *
+ * @return true = 成功
+*/
 bool Database::ModifyUserName(std::string username,std::string newname)
 {
     std::lock_guard<std::mutex> lock(m_WorkLock);
@@ -185,7 +203,13 @@ bool Database::ModifyUserName(std::string username,std::string newname)
     RESULT_CHECK(res,crud);
     return true;
 }
-
+/*
+ * @brief 添加房间
+ * @param roomname 房间名
+ * @param username 用户名
+ * @desc
+ * @return 新房间的id，在大多数地方为int32t，数据库中为64t
+*/
 int64_t Database::AddRoom(std::string roomname,std::string username)
 {
     std::lock_guard<std::mutex> lock(m_WorkLock);
@@ -224,6 +248,14 @@ int64_t Database::AddRoom(std::string roomname,std::string username)
     return -1;
 
 }
+/*
+ * @brief 获得user当前加入的所有房间
+ * @param Roooom 结果在数组中
+ * @param
+ * @param len 数组预留的长度
+ * @desc 由调用者清理内存(roooom)
+ * @return 实际返回的结果数量
+*/
 int Database::GetUserJoinedRoom(Room** Roooooom,std::string username, size_t len)
 {
     std::lock_guard<std::mutex> lock(m_WorkLock);
@@ -269,8 +301,14 @@ int Database::GetUserJoinedRoom(Room** Roooooom,std::string username, size_t len
     }
     return min(i,len);
 }
-
-//delete room* by the caller.
+/*
+ * @brief 以名字查询所有房间
+ * @param Roooom 结果在数组中
+ * @param
+ * @param len 数组预留的长度
+ * @desc 由调用者清理内存(roooom)
+ * @return 实际返回的结果数量
+*/
 int Database::GetAllRoomByName(Room** Roooooom,std::string name, size_t len)
 {
     std::lock_guard<std::mutex> lock(m_WorkLock);
@@ -313,13 +351,19 @@ int Database::GetAllRoomByName(Room** Roooooom,std::string name, size_t len)
     }
     return min(i,len);
 }
-
+/*
+ * @brief 获得id房间
+ *
+ * @param
+ * @desc
+ * @return 结果
+*/
 Room Database::GetRoom(int roomID)
 {
-    std::lock_guard<std::mutex> lock(m_WorkLock);
+    //std::lock_guard<std::mutex> lock(m_WorkLock);
     crud = mysqlx_sql_new(sess,
-                          "SELECT r.roomID, r.creator, r.name, r.id,r.state, u.showname FROM `room` r INNER JOIN `user` u " \
-                          "ON r.creator = u.username" \
+                          "SELECT r.roomID, r.creator, r.name, r.state, u.name FROM `room` r INNER JOIN `user` u " \
+                          "ON r.creator = u.username " \
                           "WHERE roomID = ?",
                           MYSQLX_NULL_TERMINATED);
     int rc = mysqlx_stmt_bind(crud, PARAM_SINT(roomID),
@@ -344,15 +388,21 @@ Room Database::GetRoom(int roomID)
         mysqlx_get_bytes(row,2,0,tmp,&len);
         room.m_Name = tmp;
         int64_t re;
-        mysqlx_get_sint(row,4,&re);
+        mysqlx_get_sint(row,3,&re);
         room.m_Lock = re;
     }
     return room;
 }
-//both
+/*
+ * @brief 加入房间
+ *
+ * @param error错误码
+ * @desc
+ * @return 加入的房间的channel
+*/
 Channel* Database::JoinRoomC(std::string username,int roomid,int* error)
 {
-    std::lock_guard<std::mutex> lock(m_WorkLock);
+    //std::lock_guard<std::mutex> lock(m_WorkLock);
 
     Room room = GetRoom(roomid);
     if(room.m_Lock != 0)
@@ -388,10 +438,10 @@ Channel* Database::JoinRoomC(std::string username,int roomid,int* error)
     }
     return channel;
 }
-
+//可能已经没用了
 bool Database::JoinRoom(std::string username,int roomid)
 {
-    std::lock_guard<std::mutex> lock(m_WorkLock);
+    //std::lock_guard<std::mutex> lock(m_WorkLock);
     crud = mysqlx_sql_new(sess,
                          "INSERT INTO db.userInRoom " \
                          "(username,roomID,privilege) VALUES (?,?,?)",
@@ -412,7 +462,7 @@ bool Database::JoinRoom(std::string username,int roomid)
     return true;
 }
 
-
+//用于登陆时自动加入channel
 int Database::GetSubscribedChannel(std::string username,Channel** channels,size_t max_len)
 {
     Room** start = new Room*[max_len];

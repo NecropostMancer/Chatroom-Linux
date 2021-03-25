@@ -1,6 +1,11 @@
+/*
+ * 调用process，传入网络字节流->
+ * 处理消息->
+ * 结果写入socket
+*/
+
+
 #include "ServerWorker.h"
-
-
 #include "Log.h"
 Database* ServerWorker::m_db = nullptr;
 ServerWorker::ServerWorker()
@@ -21,7 +26,7 @@ void ServerWorker::process(const char* data, int len)
     PostResponse(65535);
 }
 
-
+//以下分发请求
 
 bool ServerWorker::ParseMessage(int len)
 {
@@ -41,7 +46,7 @@ bool ServerWorker::ParseMessage(int len)
         switch(msgCase){
             case 0://NO_ONE_OF
                 break;
-            case 1:
+            case 1://IMPOSSIBLE
 
                 break;
             case 2:
@@ -72,12 +77,90 @@ bool ServerWorker::ParseMessage(int len)
     return true;
 }
 
+bool ServerWorker::RoomReq(RoomRequest req)
+{
+    WrapperServerMessage res;
+    switch(req.operation()){
+        case RoomRequest_Operation_CREATE:
+            return CreateRoom(req.payload());
+            break;
+        case RoomRequest_Operation_JOIN:
+            return JoinRoom(req.roomid());
+            break;
+        case RoomRequest_Operation_LEAVE:
+            return leaveRoom(req.roomid());
+            break;
+        case RoomRequest_Operation_QUERY:
+            return GetAllRooms();
+            break;
+        default:
+            RoomResponse * rres = res.mutable_roomresponse();
+            rres->mutable_error()->set_code(Error::NOTFOUND);
+            res.SerializeToString(&m_Out);
+            return false;
+            break;
+
+    }
+    RoomResponse * rres = res.mutable_roomresponse();
+    rres->mutable_error()->set_code(Error::INNERERROR);
+    res.SerializeToString(&m_Out);
+    return false;
+}
+
+bool ServerWorker::DoRoomControl(RoomControl req)
+{
+    WrapperServerMessage res;
+    switch(req.operation()){
+        case RoomControl_Operation_LOCK:
+            return LockRoom(req.roomid(),true);
+            break;
+        case RoomControl_Operation_UNLOCK:
+            return LockRoom(req.roomid(),false);
+            break;
+        case RoomControl_Operation_KICK:
+            return KickUser(req.roomid(),req.payload());
+            break;
+        case RoomControl_Operation_PROMOTE:
+            return PromoteUser(req.roomid(),req.username(),3);
+            break;
+        default:
+
+            res.mutable_error()->set_code(Error::NOTFOUND);
+            res.SerializeToString(&m_Out);
+            return false;
+            break;
+    }
+    RoomResponse * rres = res.mutable_roomresponse();
+    rres->mutable_error()->set_code(Error::INNERERROR);
+    res.SerializeToString(&m_Out);
+    return false;
+}
+
+//以下为必需过程
+
+//回复
 bool ServerWorker::PostResponse(int len)
 {
     int cnt = write(m_Sockfd,m_Out.c_str(),m_Out.length());
     Log::Debug("Write %d bytes.",cnt);
     return true;
 }
+//初始化
+void ServerWorker::InitChattingState()
+{
+    Channel* ChannelList[100] = {0};
+
+    int len = ServerWorker::m_db->GetSubscribedChannel(m_userName,ChannelList,100);
+    for(int i =0;i<len;i++)
+    {
+        Log::Debug("id:%d",ChannelList[i]->GetRoomID());
+        m_MyChannel->insert(std::pair<int,Channel*>(ChannelList[i]->GetRoomID(),ChannelList[i]));
+        ChannelList[i]->Join(this);
+    }
+
+}
+
+//以下处理请求
 
 bool ServerWorker::Register(RegisterRequest req)
 {
@@ -173,35 +256,7 @@ bool ServerWorker::ChangeName(ChangeNameRequest req)
     res.SerializeToString(&m_Out);
     return false;
 }
-bool ServerWorker::RoomReq(RoomRequest req)
-{
-    WrapperServerMessage res;
-    switch(req.operation()){
-        case RoomRequest_Operation_CREATE:
-            return CreateRoom(req.payload());
-            break;
-        case RoomRequest_Operation_JOIN:
-            return JoinRoom(req.roomid());
-            break;
-        case RoomRequest_Operation_LEAVE:
-            return leaveRoom(req.roomid());
-            break;
-        case RoomRequest_Operation_QUERY:
-            return GetAllRooms();
-            break;
-        default:
-            RoomResponse * rres = res.mutable_roomresponse();
-            rres->mutable_error()->set_code(Error::NOTFOUND);
-            res.SerializeToString(&m_Out);
-            return false;
-            break;
 
-    }
-    RoomResponse * rres = res.mutable_roomresponse();
-    rres->mutable_error()->set_code(Error::INNERERROR);
-    res.SerializeToString(&m_Out);
-    return false;
-}
 bool ServerWorker::GetAllRooms()
 {
     WrapperServerMessage res;
@@ -221,6 +276,8 @@ bool ServerWorker::GetAllRooms()
     res.SerializeToString(&m_Out);
     return true;
 }
+
+//第二个参数意义：这个函数会被其他函数调用，在那时回复缓冲区不应该由这个函数填充。
 bool ServerWorker::JoinRoomSub(int roomid,bool doResponse)
 {
     WrapperServerMessage res;
@@ -303,34 +360,7 @@ bool ServerWorker::CreateRoom(std::string name)
     res.SerializeToString(&m_Out);
     return false;
 }
-bool ServerWorker::DoRoomControl(RoomControl req)
-{
-    WrapperServerMessage res;
-    switch(req.operation()){
-        case RoomControl_Operation_LOCK:
-            return LockRoom(req.roomid(),true);
-            break;
-        case RoomControl_Operation_UNLOCK:
-            return LockRoom(req.roomid(),false);
-            break;
-        case RoomControl_Operation_KICK:
-            return KickUser(req.roomid(),req.payload());
-            break;
-        case RoomControl_Operation_PROMOTE:
-            return PromoteUser(req.roomid(),req.username(),3);
-            break;
-        default:
 
-            res.mutable_error()->set_code(Error::NOTFOUND);
-            res.SerializeToString(&m_Out);
-            return false;
-            break;
-    }
-    RoomResponse * rres = res.mutable_roomresponse();
-    rres->mutable_error()->set_code(Error::INNERERROR);
-    res.SerializeToString(&m_Out);
-    return false;
-}
 bool ServerWorker::LockRoom(int roomid,bool operation)
 {
 
@@ -366,18 +396,4 @@ bool ServerWorker::Chat(ChatMessageRequest req)
 }
 bool ServerWorker::SendNotice(int type,int roomid,std::string paraA,std::string paraB)
 {
-
-}
-void ServerWorker::InitChattingState()
-{
-    Channel* ChannelList[100] = {0};
-
-    int len = ServerWorker::m_db->GetSubscribedChannel(m_userName,ChannelList,100);
-    for(int i =0;i<len;i++)
-    {
-        Log::Debug("id:%d",ChannelList[i]->GetRoomID());
-        m_MyChannel->insert(std::pair<int,Channel*>(ChannelList[i]->GetRoomID(),ChannelList[i]));
-        ChannelList[i]->Join(this);
-    }
-
 }
