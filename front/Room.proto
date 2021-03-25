@@ -7,17 +7,19 @@ message RoomRequest {
         CREATE = 0;
         JOIN = 1;
         LEAVE = 2;
+        QUERY = 3;
     }
     int32 roomid = 1;
     string username = 2;
     Operation operation = 3;
+    string payload = 4;
 }
 
 message RoomControl {
     enum Operation {
         LOCK = 0;
         UNLOCK = 1;
-        MUTE = 2;
+        KICK = 2;
         PROMOTE = 3;
     }
     int32 roomid = 1;
@@ -28,4 +30,6 @@ message RoomControl {
 
 message RoomResponse {
     Error error = 1;
+    int32 roomid = 2;
+    string roomname = 3;
 }
