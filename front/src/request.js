@@ -21,7 +21,7 @@ const tcpClient = {
     },
     socket: net.Socket(),
     init : function(){
-        this.socket.connect(options,function(){
+        this.socket.connect(this.options,function(){
             console.log("connected to server");
             //tcp_client.write('yay!');
         })
@@ -94,14 +94,15 @@ function ProtobufSend(messageName,payload){
     let bytes = protoStorage[messageName].encode(message).finish();
     console.log(bytes);
     tcpClient.socket.write(bytes);
-    let re = protoStorage[messageName].decode(bytes);
-    console.log(re);
+    //let re = protoStorage[messageName].decode(bytes);
+    //console.log(re);
 }
 
 const ProtobufReciever = {
     _onRecieveMessageResponse:[],
     _onRecieveRoomResponse:[],
     _onRecieveAuthResponse:undefined,
+    _onChatMessageRecieve:function(e){console.log(e)},
     onRecieveMessageResponse:function(cb){
         this._onRecieveMessageResponse.push(cb);
     },
@@ -127,7 +128,17 @@ function ProtobufRead(payload){
     var res = protoStorage["Res"].decode(payload);
     console.log(res);
     if(res.loginResponse){
-        ProtobufReciever._onRecieveAuthResponse();
+        ProtobufReciever._onRecieveAuthResponse(res.loginResponse);
+        if(res.loginResponse.username){
+            userState.username = res.loginResponse.username;
+            userState.tokenFromServer = res.loginResponse.token;
+        }
+    }else if(res.chatMessageRequest){
+        for(let i = 0 ;i<ProtobufReciever._onRecieveMessageResponse.length;i++){
+            ProtobufReciever._onRecieveMessageResponse[i]();
+        }
+    }else if(res.ChatMessageSend){
+        ProtobufReciever._onChatMessageRecieve(res.ChatMessageSend);
     }
     /*
     if(payload instanceof protoStorage["ChatMessageSend"]){
@@ -150,10 +161,6 @@ function ProtobufRead(payload){
     else{
         console.log("unsupported message type.");
     }
-}
-
-function OnMessage(){
-
 }
 
 function delayPromise(ms){
@@ -179,7 +186,6 @@ exports.LoginRequest = function (username,password){
             ProtobufReciever.onAuth(function(response){
                 resolve(response); 
             });
-            console.log("send")
             try{
                 ProtobufSend("Req",{
                     test: 1,
@@ -227,17 +233,20 @@ exports.ChatMessageRequest = function (msg,roomid){
                 }
             });
             try{
-                ProtobufSend("ChatMessageRequest",{
+                ProtobufSend("Req",{
+                    test:1,
+                    chatMessageRequest:{
                     username : userState.loginUserName,
                     token : userState.tokenFromServer,
                     msg : msg,
                     roomid : roomid,
                     random : md5(msg)
+                    }
                 });
             }catch(e){
                 reject(e);
             }
-        }),30000);
+        }),5000);
 }
 
 exports.RoomRequest = function(opreation,roomid){
@@ -290,4 +299,8 @@ exports.StartClient = function(){
         tcpClient.socket.on("data",(data)=>{ProtobufRead(data);});
     });
     
+}
+
+exports.OnChatMessageRecieve = function(cb){
+    ProtobufReciever._onChatMessageRecieve = cb;
 }
