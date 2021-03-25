@@ -40,6 +40,8 @@
     }
   },
   "dependencies": {
+    "bootstrap": "^4.6.0",
+    "bootstrap-vue": "^2.21.2",
     "md5": "^2.3.0",
     "protobufjs": "^6.10.2",
     "socket.io": "^4.0.0",

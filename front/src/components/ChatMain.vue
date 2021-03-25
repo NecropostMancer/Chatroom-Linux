@@ -222,7 +222,7 @@ export default {
         LeaveRoom : function(roomid){
             this.request.RoomRequest(2,roomid,'').then((res)=>{
                 if(res.error.code != 4){
-                    this.$data[roomid] = undefined;
+                    this.$data.rooms[roomid] = undefined;
                 }else{
                     throw new Error("roomNotleave");
                 }
