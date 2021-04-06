@@ -32,4 +32,5 @@ message RoomResponse {
     Error error = 1;
     int32 roomid = 2;
     string roomname = 3;
+    string creator = 4;
 }

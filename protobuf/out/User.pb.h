@@ -356,8 +356,9 @@ class LoginResponse PROTOBUF_FINAL :
 
   enum : int {
     kUsernameFieldNumber = 1,
-    kTokenFieldNumber = 2,
-    kErrorFieldNumber = 3,
+    kShownameFieldNumber = 2,
+    kTokenFieldNumber = 3,
+    kErrorFieldNumber = 4,
   };
   // string username = 1;
   void clear_username();
@@ -375,7 +376,23 @@ class LoginResponse PROTOBUF_FINAL :
   std::string* _internal_mutable_username();
   public:
 
-  // string token = 2;
+  // string showname = 2;
+  void clear_showname();
+  const std::string& showname() const;
+  void set_showname(const std::string& value);
+  void set_showname(std::string&& value);
+  void set_showname(const char* value);
+  void set_showname(const char* value, size_t size);
+  std::string* mutable_showname();
+  std::string* release_showname();
+  void set_allocated_showname(std::string* showname);
+  private:
+  const std::string& _internal_showname() const;
+  void _internal_set_showname(const std::string& value);
+  std::string* _internal_mutable_showname();
+  public:
+
+  // string token = 3;
   void clear_token();
   const std::string& token() const;
   void set_token(const std::string& value);
@@ -391,7 +408,7 @@ class LoginResponse PROTOBUF_FINAL :
   std::string* _internal_mutable_token();
   public:
 
-  // .Error error = 3;
+  // .Error error = 4;
   bool has_error() const;
   private:
   bool _internal_has_error() const;
@@ -417,6 +434,7 @@ class LoginResponse PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr username_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr showname_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr token_;
   ::Error* error_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -1108,7 +1126,68 @@ inline void LoginResponse::set_allocated_username(std::string* username) {
   // @@protoc_insertion_point(field_set_allocated:LoginResponse.username)
 }
 
-// string token = 2;
+// string showname = 2;
+inline void LoginResponse::clear_showname() {
+  showname_.ClearToEmpty();
+}
+inline const std::string& LoginResponse::showname() const {
+  // @@protoc_insertion_point(field_get:LoginResponse.showname)
+  return _internal_showname();
+}
+inline void LoginResponse::set_showname(const std::string& value) {
+  _internal_set_showname(value);
+  // @@protoc_insertion_point(field_set:LoginResponse.showname)
+}
+inline std::string* LoginResponse::mutable_showname() {
+  // @@protoc_insertion_point(field_mutable:LoginResponse.showname)
+  return _internal_mutable_showname();
+}
+inline const std::string& LoginResponse::_internal_showname() const {
+  return showname_.Get();
+}
+inline void LoginResponse::_internal_set_showname(const std::string& value) {
+  
+  showname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void LoginResponse::set_showname(std::string&& value) {
+  
+  showname_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:LoginResponse.showname)
+}
+inline void LoginResponse::set_showname(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  showname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:LoginResponse.showname)
+}
+inline void LoginResponse::set_showname(const char* value,
+    size_t size) {
+  
+  showname_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:LoginResponse.showname)
+}
+inline std::string* LoginResponse::_internal_mutable_showname() {
+  
+  return showname_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* LoginResponse::release_showname() {
+  // @@protoc_insertion_point(field_release:LoginResponse.showname)
+  return showname_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void LoginResponse::set_allocated_showname(std::string* showname) {
+  if (showname != nullptr) {
+    
+  } else {
+    
+  }
+  showname_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), showname,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:LoginResponse.showname)
+}
+
+// string token = 3;
 inline void LoginResponse::clear_token() {
   token_.ClearToEmpty();
 }
@@ -1169,7 +1248,7 @@ inline void LoginResponse::set_allocated_token(std::string* token) {
   // @@protoc_insertion_point(field_set_allocated:LoginResponse.token)
 }
 
-// .Error error = 3;
+// .Error error = 4;
 inline bool LoginResponse::_internal_has_error() const {
   return this != internal_default_instance() && error_ != nullptr;
 }

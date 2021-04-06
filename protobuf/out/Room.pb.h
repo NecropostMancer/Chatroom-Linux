@@ -677,6 +677,7 @@ class RoomResponse PROTOBUF_FINAL :
 
   enum : int {
     kRoomnameFieldNumber = 3,
+    kCreatorFieldNumber = 4,
     kErrorFieldNumber = 1,
     kRoomidFieldNumber = 2,
   };
@@ -694,6 +695,22 @@ class RoomResponse PROTOBUF_FINAL :
   const std::string& _internal_roomname() const;
   void _internal_set_roomname(const std::string& value);
   std::string* _internal_mutable_roomname();
+  public:
+
+  // string creator = 4;
+  void clear_creator();
+  const std::string& creator() const;
+  void set_creator(const std::string& value);
+  void set_creator(std::string&& value);
+  void set_creator(const char* value);
+  void set_creator(const char* value, size_t size);
+  std::string* mutable_creator();
+  std::string* release_creator();
+  void set_allocated_creator(std::string* creator);
+  private:
+  const std::string& _internal_creator() const;
+  void _internal_set_creator(const std::string& value);
+  std::string* _internal_mutable_creator();
   public:
 
   // .Error error = 1;
@@ -731,6 +748,7 @@ class RoomResponse PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr roomname_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr creator_;
   ::Error* error_;
   ::PROTOBUF_NAMESPACE_ID::int32 roomid_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -1235,6 +1253,67 @@ inline void RoomResponse::set_allocated_roomname(std::string* roomname) {
   roomname_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), roomname,
       GetArena());
   // @@protoc_insertion_point(field_set_allocated:RoomResponse.roomname)
+}
+
+// string creator = 4;
+inline void RoomResponse::clear_creator() {
+  creator_.ClearToEmpty();
+}
+inline const std::string& RoomResponse::creator() const {
+  // @@protoc_insertion_point(field_get:RoomResponse.creator)
+  return _internal_creator();
+}
+inline void RoomResponse::set_creator(const std::string& value) {
+  _internal_set_creator(value);
+  // @@protoc_insertion_point(field_set:RoomResponse.creator)
+}
+inline std::string* RoomResponse::mutable_creator() {
+  // @@protoc_insertion_point(field_mutable:RoomResponse.creator)
+  return _internal_mutable_creator();
+}
+inline const std::string& RoomResponse::_internal_creator() const {
+  return creator_.Get();
+}
+inline void RoomResponse::_internal_set_creator(const std::string& value) {
+  
+  creator_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void RoomResponse::set_creator(std::string&& value) {
+  
+  creator_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:RoomResponse.creator)
+}
+inline void RoomResponse::set_creator(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  creator_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:RoomResponse.creator)
+}
+inline void RoomResponse::set_creator(const char* value,
+    size_t size) {
+  
+  creator_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:RoomResponse.creator)
+}
+inline std::string* RoomResponse::_internal_mutable_creator() {
+  
+  return creator_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* RoomResponse::release_creator() {
+  // @@protoc_insertion_point(field_release:RoomResponse.creator)
+  return creator_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void RoomResponse::set_allocated_creator(std::string* creator) {
+  if (creator != nullptr) {
+    
+  } else {
+    
+  }
+  creator_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), creator,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:RoomResponse.creator)
 }
 
 #ifdef __GNUC__

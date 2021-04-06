@@ -208,6 +208,7 @@ bool ServerWorker::Login(LoginRequest req)
 
             LoginResponse* succ = res.mutable_loginresponse();
             succ->set_token( user.m_ShowName + "@" + "12345");
+            succ->set_showname(user.m_ShowName);
             succ->mutable_error()->set_code(Error::SUCCESS);
             ServerWorker::m_db->OpenUser(m_Sockfd,m_Address,req.username());
             m_userName = req.username();
@@ -271,6 +272,7 @@ bool ServerWorker::GetAllRooms()
 
         rm->set_roomid(rooms[i]->m_roomID);
         rm->set_roomname(rooms[i]->m_Name);
+        rm->set_creator(rooms[i]->m_Creator);
         delete rooms[i];
     }
     res.SerializeToString(&m_Out);
@@ -283,6 +285,11 @@ bool ServerWorker::JoinRoomSub(int roomid,bool doResponse)
     WrapperServerMessage res;
     Channel* chan;
     int error=255;
+    if(m_MyChannel->find(roomid)!=m_MyChannel->end())
+    {
+        res.mutable_roomresponse()->mutable_error()->set_code(Error::WRONGAUTH);
+        return;
+    }
     chan = ServerWorker::m_db->JoinRoomC(m_userName,roomid,&error);
     if(chan != nullptr){
         m_MyChannel->insert(std::pair<int,Channel*>(roomid,chan));
@@ -363,7 +370,21 @@ bool ServerWorker::CreateRoom(std::string name)
 
 bool ServerWorker::LockRoom(int roomid,bool operation)
 {
+    WrapperServerMessage res;
+    RoomResponse* rres = res.mutable_roomresponse();
 
+    if(ServerWorker::m_db->UpdateRoom(m_userName,"",roomid,operation))
+    {
+        rres->mutable_error()->set_code(Error::SUCCESS);
+        rres->set_roomid(roomid);
+        rres->set_roomname("locked");
+        res.SerializeToString(&m_Out);
+        return true;
+    }
+    rres->mutable_error()->set_code(Error::NOTFOUND);
+    rres->set_roomid(-1);
+    rres->set_roomname("unlocked");
+    res.SerializeToString(&m_Out);
     return false;
 }
 bool ServerWorker::KickUser(int roomid,std::string username)

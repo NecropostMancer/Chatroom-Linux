@@ -507,21 +507,23 @@ bool Database::LeaveRoom(std::string username,int roomid)
 bool Database::UpdateRoom(std::string username,std::string newname,int roomid,bool lock)
 {
     Room room = GetRoom(roomid);
-
+    std::string mutable_Newname = newname;
     if(room.m_Creator == username)
     {
-        if(newname == "")newname = room.m_Name;
+        if(newname == "")mutable_Newname = room.m_Name;
         int state = lock? 1:0;
         crud = mysqlx_sql_new(sess,
-                          "UPDATE `room` " \
-                          "SET name = ? , state = ?" \
-                          "WHERE roomID = ?",
+                          //"UPDATE `db`.`room` " \
+                          //"SET `name` = ? , `state` = ? " \
+                          //"WHERE (`roomID` = ?);",
+                          "UPDATE `db`.`room` SET `name`= ?,`state` = ? WHERE (`roomID` = ?);",
                           MYSQLX_NULL_TERMINATED);
-        int rc = mysqlx_stmt_bind(crud, PARAM_STRING(newname.c_str()),
+
+        int rc = mysqlx_stmt_bind(crud, PARAM_STRING(mutable_Newname.c_str()),
                                         PARAM_SINT(state),
-                                        PARAM_STRING(username.c_str()),
+                                        PARAM_SINT(roomid),
                                         PARAM_END);
-        User user;
+
         if(rc != RESULT_OK)
         {
             Log::Error("update room bind failed.");
@@ -530,7 +532,9 @@ bool Database::UpdateRoom(std::string username,std::string newname,int roomid,bo
         res = mysqlx_execute(crud);
 
         RESULT_CHECK(res,crud);
+        return true;
     }
+    return false;
 }
 bool Database::SetPrivilege(std::string username,int roomid,int level)
 {
