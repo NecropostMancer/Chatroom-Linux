@@ -229,7 +229,7 @@
 	<google/protobuf/port_def.inc>
 	<google/protobuf/port_undef.inc>
 
-1616641232 source:/home/ghd/chatting-room-single/main.cpp
+1617775435 source:/home/ghd/chatting-room-single/main.cpp
 	<iostream>
 	"ThreadPool.h"
 	"Database.h"
@@ -247,7 +247,7 @@
 	"ServerWorker.h"
 	<unistd.h>
 
-1616677771 /home/ghd/chatting-room-single/include/ServerWorker.h
+1617777533 /home/ghd/chatting-room-single/include/ServerWorker.h
 	"ThreadPool.h"
 	"sys/uio.h"
 	<cstdlib>
@@ -259,6 +259,8 @@
 	<unistd.h>
 	"Database.h"
 	"ServerWorkerInter.h"
+	"User.h"
+	"Room.h"
 	"User.pb.h"
 	"Chat.pb.h"
 	"Room.pb.h"
@@ -272,22 +274,19 @@
 	<semaphore.h>
 	<exception>
 
-1616676425 /home/ghd/chatting-room-single/include/Database.h
+1617767525 /home/ghd/chatting-room-single/include/Database.h
 	<mysqlx/xapi.h>
-	<mutex>
-	<map>
-	"User.h"
-	"Room.h"
-	"ChatLog.h"
-	"Channel.h"
-	<sys/socket.h>
-	<netinet/in.h>
 
-1616676727 /home/ghd/chatting-room-single/include/User.h
+1617782666 /home/ghd/chatting-room-single/include/User.h
 	<string>
+	"Entity.h"
+	"Channel.h"
+	"ChatLog.h"
+	"Room.h"
 
-1616676568 /home/ghd/chatting-room-single/include/Room.h
-	"User.h"
+1617780659 /home/ghd/chatting-room-single/include/Room.h
+	"Entity.h"
+	<string>
 
 1616676495 /home/ghd/chatting-room-single/include/Log.h
 
@@ -435,10 +434,9 @@
 	"Log.h"
 	"ThreadPool.h"
 
-1617688741 source:/home/ghd/chatting-room-single/src/Database.cpp
+1617775039 source:/home/ghd/chatting-room-single/src/Database.cpp
 	"Database.h"
 	"Log.h"
-	"User.h"
 
 1614763763 source:/home/ghd/chatting-room-single/src/Log.cpp
 	"Log.h"
@@ -452,19 +450,20 @@
 1616676516 /home/ghd/chatting-room-single/include/Permission.h
 	"User.h"
 
-1613989590 source:/home/ghd/chatting-room-single/src/Room.cpp
+1617780201 source:/home/ghd/chatting-room-single/src/Room.cpp
 	"Room.h"
+	"Log.h"
 
 1613994046 source:/home/ghd/chatting-room-single/src/Server.cpp
 	"Server.h"
 
 1616676614 /home/ghd/chatting-room-single/include/Server.h
 
-1617281245 source:/home/ghd/chatting-room-single/src/ServerWorker.cpp
+1617783891 source:/home/ghd/chatting-room-single/src/ServerWorker.cpp
 	"ServerWorker.h"
 	"Log.h"
 
-1613989571 source:/home/ghd/chatting-room-single/src/User.cpp
+1617783307 source:/home/ghd/chatting-room-single/src/User.cpp
 	"User.h"
 
 1616676698 /home/ghd/chatting-room-single/include/SingleThreadTCPServer.h
@@ -482,7 +481,7 @@
 	<errno.h>
 	"ServerWorker.h"
 
-1616568063 source:/home/ghd/chatting-room-single/src/SingleThreadTCPServer.cpp
+1617767599 source:/home/ghd/chatting-room-single/src/SingleThreadTCPServer.cpp
 	"SingleThreadTCPServer.h"
 	"Log.h"
 	<iostream>
@@ -490,13 +489,14 @@
 1616676354 /home/ghd/chatting-room-single/include/ChatLog.h
 	<string>
 
-1616039549 source:/home/ghd/chatting-room-single/src/Channel.cpp
+1617782314 source:/home/ghd/chatting-room-single/src/Channel.cpp
 	"Channel.h"
 
-1616677550 /home/ghd/chatting-room-single/include/Channel.h
+1617782308 /home/ghd/chatting-room-single/include/Channel.h
 	"ServerWorkerInter.h"
 	<vector>
 	"Log.h"
+	<map>
 
 1615448322 source:/home/ghd/chatting-room-single/src/ChatLog.cpp
 	"ChatLog.h"
@@ -538,4 +538,11 @@
 	<google/protobuf/port_undef.inc>
 
 1616676876 /home/ghd/chatting-room-single/include/ServerWorkerInter.h
+
+1617776026 /home/ghd/chatting-room-single/include/Entity.h
+	<mysqlx/xapi.h>
+	"Database.h"
+
+1617710359 source:/home/ghd/chatting-room-single/src/Entity.cpp
+	"Entity.h"
 

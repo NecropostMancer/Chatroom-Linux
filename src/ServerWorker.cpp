@@ -50,6 +50,7 @@ bool ServerWorker::ParseMessage(int len)
 
                 break;
             case 2:
+                if(!login)return false;
                 Chat(msg.chatmessagerequest());
                 break;
             case 3:
@@ -61,12 +62,15 @@ bool ServerWorker::ParseMessage(int len)
                 Register(msg.registerrequest());
                 break;
             case 6:
+                if(!login)return false;
                 ChangeName(msg.changenamerequest());
                 break;
             case 7:
+                if(!login)return false;
                 RoomReq(msg.roomrequest());
                 break;
             case 8:
+                if(!login)return false;
                 DoRoomControl(msg.roomcontrol());
                 break;
         }
@@ -149,8 +153,12 @@ bool ServerWorker::PostResponse(int len)
 void ServerWorker::InitChattingState()
 {
     Channel* ChannelList[100] = {0};
-
-    int len = ServerWorker::m_db->GetSubscribedChannel(m_userName,ChannelList,100);
+    Room* RoomList[100];
+    memset(&RoomList,0,sizeof(RoomList));
+    Room roomCol;
+    roomCol.connect(ServerWorker::m_db);
+    int cnt = roomCol.GetUserJoinedRoom(RoomList,m_User.m_UserName,100);
+    int len = m_User.GetSubscribedChannel(ChannelList,RoomList,cnt);
     for(int i =0;i<len;i++)
     {
         Log::Debug("id:%d",ChannelList[i]->GetRoomID());
@@ -165,8 +173,10 @@ void ServerWorker::InitChattingState()
 bool ServerWorker::Register(RegisterRequest req)
 {
     WrapperServerMessage res;
-    User user = ServerWorker::m_db->GetUser(req.username());
-    if(user.m_UserName.length() != 0)
+    m_User.connect(ServerWorker::m_db);
+    m_User.GetUser(req.username());
+
+    if(m_User.m_UserName.length() != 0)
     {
         LoginResponse* error = res.mutable_loginresponse();
         error->mutable_error()->set_code(Error::WRONGAUTH);
@@ -174,10 +184,10 @@ bool ServerWorker::Register(RegisterRequest req)
         return false;
 
     }else{
-        user.m_UserName = req.username();
-        user.m_ShowName = req.showname();
-        user.m_PasswdSalt = req.password();
-        if(ServerWorker::m_db->AddUser(user))
+        m_User.m_UserName = req.username();
+        m_User.m_ShowName = req.showname();
+        m_User.m_PasswdSalt = req.password();
+        if(m_User.AddUser())
         {
             LoginResponse* succ = res.mutable_loginresponse();
             succ->mutable_error()->set_code(Error::SUCCESS);
@@ -194,8 +204,10 @@ bool ServerWorker::Register(RegisterRequest req)
 bool ServerWorker::Login(LoginRequest req)
 {
     WrapperServerMessage res;
-    User user = ServerWorker::m_db->GetUser(req.username());
-    if(user.m_UserName.length() == 0)
+    m_User.connect(ServerWorker::m_db);
+    m_User.GetUser(req.username());
+
+    if(m_User.m_UserName.length() == 0)
     {
         LoginResponse* error = res.mutable_loginresponse();
         error->mutable_error()->set_code(Error::WRONGAUTH);
@@ -203,18 +215,17 @@ bool ServerWorker::Login(LoginRequest req)
         return false;
 
     }else{
-        if(user.m_PasswdSalt == req.password())
+        if(m_User.m_PasswdSalt == req.password())
         {
 
             LoginResponse* succ = res.mutable_loginresponse();
-            succ->set_token( user.m_ShowName + "@" + "12345");
-            succ->set_showname(user.m_ShowName);
+            succ->set_token( m_User.m_ShowName + "@" + "12345");
+            succ->set_showname(m_User.m_ShowName);
             succ->mutable_error()->set_code(Error::SUCCESS);
-            ServerWorker::m_db->OpenUser(m_Sockfd,m_Address,req.username());
-            m_userName = req.username();
-            m_ShowName = user.m_ShowName;
+
             res.SerializeToString(&m_Out);
             InitChattingState();
+            login = true;
             return true;
         }
     }
@@ -229,13 +240,14 @@ bool ServerWorker::Logout()
     {
         (pair.second)->Leave(this);
     }
+    login = false;
     return true;
 }
 bool ServerWorker::ChangeName(ChangeNameRequest req)
 {
     WrapperServerMessage res;
-    User user = ServerWorker::m_db->GetUser(req.username());
-    if(user.m_UserName.length() == 0)
+
+    if(m_User.m_UserName.length() == 0)
     {
         Error* error = res.mutable_error();
         error->set_code(Error::WRONGAUTH);
@@ -243,12 +255,11 @@ bool ServerWorker::ChangeName(ChangeNameRequest req)
         return false;
 
     }else{
-        if(ServerWorker::m_db->ModifyUserName(m_userName,req.name()))
+        if(m_User.ModifyUserName(req.name()))
         {
             RegularResponse* rres = res.mutable_regularresponse();
             rres->mutable_error()->set_code(Error::SUCCESS);
             res.SerializeToString(&m_Out);
-            m_ShowName = req.name();
             return true;
         }
     }
@@ -264,7 +275,9 @@ bool ServerWorker::GetAllRooms()
     res.mutable_roomresponse();
     RoomResponse room;
     Room* rooms[99];
-    int len = ServerWorker::m_db->GetUserJoinedRoom(rooms,m_userName,99);
+    Room roomCol;
+    roomCol.connect(ServerWorker::m_db);
+    int len = roomCol.GetUserJoinedRoom(rooms,m_User.m_UserName,99);
 
     for(int i =0;i<len;i++)
     {
@@ -283,14 +296,25 @@ bool ServerWorker::GetAllRooms()
 bool ServerWorker::JoinRoomSub(int roomid,bool doResponse)
 {
     WrapperServerMessage res;
-    Channel* chan;
+    Channel* chan = nullptr;
     int error=255;
     if(m_MyChannel->find(roomid)!=m_MyChannel->end())
     {
         res.mutable_roomresponse()->mutable_error()->set_code(Error::WRONGAUTH);
-        return;
+        return false;
     }
-    chan = ServerWorker::m_db->JoinRoomC(m_userName,roomid,&error);
+
+    Room room;
+    room.connect(ServerWorker::m_db);
+    room.m_roomID = roomid;
+    room.GetRoom();
+
+    if(room.m_Lock != 0)
+    {
+        error = -1;
+    }else{
+        chan = m_User.JoinRoomC(roomid,&error);
+    }
     if(chan != nullptr){
         m_MyChannel->insert(std::pair<int,Channel*>(roomid,chan));
         chan->Join(this);
@@ -331,7 +355,7 @@ bool ServerWorker::leaveRoom(int roomid)
 
     if(iter != m_MyChannel->end())
     {
-        ServerWorker::m_db->LeaveRoom(m_userName,roomid);
+        m_User.LeaveRoom(roomid);
         rres->set_roomid(roomid);
         rres->mutable_error()->set_code(Error::SUCCESS);
         res.SerializeToString(&m_Out);
@@ -348,7 +372,11 @@ bool ServerWorker::CreateRoom(std::string name)
 {
     WrapperServerMessage res;
     RoomResponse* rres = res.mutable_roomresponse();
-    int64_t roomID = ServerWorker::m_db->AddRoom(name,m_userName);
+
+    Room room;
+    room.connect(ServerWorker::m_db);
+    int64_t roomID = room.AddRoom(name,m_User.m_UserName);
+
     if(roomID != -1)
     {
         bool ret = JoinRoomSub(roomID,false);
@@ -373,7 +401,11 @@ bool ServerWorker::LockRoom(int roomid,bool operation)
     WrapperServerMessage res;
     RoomResponse* rres = res.mutable_roomresponse();
 
-    if(ServerWorker::m_db->UpdateRoom(m_userName,"",roomid,operation))
+    Room roomCol;
+    roomCol.connect(ServerWorker::m_db);
+    roomCol.m_roomID = roomid;
+
+    if(roomCol.UpdateRoom(m_User.m_UserName,"",operation))
     {
         rres->mutable_error()->set_code(Error::SUCCESS);
         rres->set_roomid(roomid);
@@ -408,7 +440,7 @@ bool ServerWorker::Chat(ChatMessageRequest req)
         send->set_msg(req.msg());
         send->set_roomid(req.roomid());
         send->set_roomorder((iter->second)->GetMessageCount());
-        send->set_showname(m_ShowName);
+        send->set_showname(m_User.m_ShowName);
         send->set_type(1);
         res.SerializeToString(&m_Out);
         (iter->second)->Send(m_Out.c_str(),m_Out.length(),this);

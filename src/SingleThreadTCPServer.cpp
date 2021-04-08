@@ -91,7 +91,6 @@ int SingleThreadTCPServer::Start()
             }
             else if (events[i].events & EPOLLIN)
             {
-
                 int connfd = events[i].data.fd;
                 memset(m_TmpBuffer,0,BUFFER_SIZE);
                 int recvNum = recv(connfd, m_TmpBuffer,BUFFER_SIZE-1,0);

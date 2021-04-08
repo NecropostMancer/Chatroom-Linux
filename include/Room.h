@@ -8,16 +8,18 @@
 #ifndef ROOM_H
 #define ROOM_H
 
-
-#include "User.h"
-
-class Room
+#include "Entity.h"
+#include <string>
+class Room : public Entity
 {
     public:
         Room();
         virtual ~Room();
-        void Add(User* user);
-        void Remove(User* user);
+        bool GetRoom();
+        int GetUserJoinedRoom(Room** Roooooom,std::string username, size_t len);//don't forget delete[]
+        int64_t AddRoom(std::string roomname,std::string username);
+        bool UpdateRoom(std::string username,std::string newname,bool lock);
+        int GetAllRoomByName(Room** Roooooom,std::string name, size_t len);//don't forget delete[]
 
         int m_roomID;
         int m_Lock = 0;

@@ -23,6 +23,9 @@
 
 #include "ServerWorkerInter.h"
 
+#include "User.h"
+#include "Room.h"
+
 #include "User.pb.h"
 #include "Chat.pb.h"
 #include "Room.pb.h"
@@ -41,8 +44,6 @@ class ServerWorker : public IServerWorker
         }
         void Close()
         {
-            m_db->CloseUser(m_Sockfd);
-
             Logout();
             delete m_MyChannel;
         }
@@ -57,6 +58,7 @@ class ServerWorker : public IServerWorker
             m_db = &database;
         }
         static Database* m_db;
+
     protected:
 
     private:
@@ -97,8 +99,12 @@ class ServerWorker : public IServerWorker
         sockaddr_in m_Address;
 
         std::map<int,Channel*>* m_MyChannel;
-        std::string m_userName;
-        std::string m_ShowName;
+
+        const char* m_messageStart = "Chatting V0.1";
+        const int m_BodyOffset = 4;
+
+        User m_User;
+        bool login = false;
 };
 
 #endif // SERVERWORKER_H

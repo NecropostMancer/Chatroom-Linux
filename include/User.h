@@ -8,25 +8,35 @@
 #define USER_H
 
 #include <string>
+#include "Entity.h"
+#include "Channel.h"
+#include "ChatLog.h"
+#include "Room.h"
 
-class Room;
-
-class User
+class User : public Entity
 {
     public:
         User();
-        User(std::string username,std::string pwds,std::string showname):
-            m_UserName(username),m_PasswdSalt(pwds),m_ShowName(showname){};
-        virtual ~User();
-        void Register();
-        void Login();
-        void Logout();
-        void Join(Room* room);
-        void Leave(Room* room);
+        User(Database& db)
+        {
+            sess = db.GetSession();
+        }
 
-        void Kick(Room* room,User* other);
-        void Lock(Room* room);
-        void Say(Room* room);
+        virtual ~User();
+
+        bool AddUser();
+        bool GetUser(std::string username);
+        bool GetUserInRoom(int roomID, bool aliveOnly = true);
+        bool ModifyUserName(std::string newname);
+
+        Channel* JoinRoomC(int roomid,int* error);
+        int GetSubscribedChannel(Channel** channels,Room** AllRoom,size_t max_len);
+        bool LeaveRoom(int roomid);
+        bool LockRoom(int roomid,bool unlock = false);
+        bool SetPrivilege(int roomid,int level);
+        int GetPrivilege(int roomid);
+        bool AddChatlog(int roomid,time_t time);
+        ChatLog GetChatlogAfterTime(int roomid,time_t time,int cnt = -1);
 
         std::string m_UserName;
         std::string m_PasswdSalt;

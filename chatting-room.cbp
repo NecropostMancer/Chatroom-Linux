@@ -42,6 +42,7 @@
 		<Unit filename="include/Channel.h" />
 		<Unit filename="include/ChatLog.h" />
 		<Unit filename="include/Database.h" />
+		<Unit filename="include/Entity.h" />
 		<Unit filename="include/ISerializable.h" />
 		<Unit filename="include/Log.h" />
 		<Unit filename="include/Permission.h" />
@@ -67,6 +68,7 @@
 		<Unit filename="src/Channel.cpp" />
 		<Unit filename="src/ChatLog.cpp" />
 		<Unit filename="src/Database.cpp" />
+		<Unit filename="src/Entity.cpp" />
 		<Unit filename="src/Log.cpp" />
 		<Unit filename="src/Permission.cpp" />
 		<Unit filename="src/Room.cpp" />

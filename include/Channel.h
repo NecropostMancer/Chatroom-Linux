@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "Log.h"
+#include <map>
 class Channel
 {
     public:
@@ -47,6 +48,8 @@ class Channel
         void Talk(IServerWorker* worker);
         int GetMessageCount(){return ++m_MessageCnt;}
         int GetRoomID(){return m_RoomID;}
+
+        static std::map<int,Channel*> AliveChannel;
     protected:
 
     private:
