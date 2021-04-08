@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="theme-color">
         <ChatMain v-if="log" :request = "ChatPageMethod"></ChatMain>
         <Title v-else :request = "LoginPageMethod"></Title>
     </div>
@@ -69,7 +69,8 @@ export default {
                 RoomRequest: this.RoomRequest,
                 RoomControl: this.RoomControl,
                 SwitchPage : this.SwitchPage,
-                OnChatMessageRecieve : this.OnChatMessageRecieve
+                OnChatMessageRecieve : this.OnChatMessageRecieve,
+                ChangeNameRequest : this.ChangeNameRequest
             },
             log :false,
             that: this
@@ -250,7 +251,7 @@ export default {
                     }
                 }),5000);
         },
-        RoomControl : function(opreation,roomid,extra){
+        RoomControl : function(opreation,roomid,payload){
             var op = undefined;
             var that = this;
             switch (opreation){
@@ -293,6 +294,16 @@ export default {
         },
         OnChatMessageRecieve : function(cb){
             this.ProtobufReciever._onChatMessageRecieve = cb;
+        },
+        ChangeNameRequest : function(name){
+            var that = this;
+            this.ProtobufSend("Req",{
+                test: 1,
+                changeNameRequest:{
+                username : that.$userState.loginUserName,
+                name : name,
+                }
+            });
         }
     },
     components: {

@@ -2,12 +2,22 @@
 <html>
 <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-    <title>Getting Started</title>
+    <title>Chatting-Room</title>
 </head>
 <body>
-<div id="app"></div>
-<!--    This will cause electron throw error message-->
-<!--    <script src="./dist/bundle.js"></script>-->
-<script>require('./dist/bundle.js')</script>
+    
+    <div id="app"></div>
+    <!--    This will cause electron throw error message-->
+    <!--    <script src="./dist/bundle.js"></script>-->
+    <script>require('./dist/bundle.js')</script>
+    <script>
+        const customTitlebar = require('custom-electron-titlebar');
+
+        new customTitlebar.Titlebar({
+            backgroundColor: customTitlebar.Color.fromHex('#444'),
+            menu: null
+        });
+
+    </script>
 </body>
 </html>

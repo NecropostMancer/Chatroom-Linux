@@ -4,19 +4,16 @@ import {createApp} from 'vue';
 
 import App from './App.vue';
 
-//import './src/style/common.scss';
+import './src/style/common.scss';
 
 //import ChatMain from './src/components/ChatMain.vue'
 //import Login from './src/components/Login.vue'
 
-import {BootstrapVue,BootstrapVueIcons} from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
 
 const app = createApp(App)
 
-app.use(BootstrapVue)
-app.use(BootstrapVueIcons)
 
 //const routes = [
 //    {path: '/main', component: ChatMain},

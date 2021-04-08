@@ -1,7 +1,18 @@
-body {
-    background: #000428;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #004e92, #000428);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #004e92, #000428); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    margin: 0;
-    padding: 0;
+.theme-color{
+    --background-primary: #36393f;
+    --background-secondary: #2f3136;
+    --background-secondary-alt: #292b2f;
+    --background-tertiary: #202225;
+    --background-accent: #4f545c;
+    --header-primary: #fff;
+    --header-secondary: #b9bbbe;
+    --text-normal: #dcddde;
+    --scrollbar-thin-thumb: #202225;
+    --scrollbar-auto-track: #2e3338;
+    --interactive-hover: #dcddde;
+    --interactive-normal: #b9bbbe;
+    --interactive-active: #fff;
+    --interactive-muted: #4f545c;
+    --deprecated-text-input-bg: rgba(0,0,0,0.1);
+    --border-light-dark: (rgb(118, 118, 118), rgb(133, 133, 133));
 }
