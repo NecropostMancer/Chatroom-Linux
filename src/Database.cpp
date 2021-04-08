@@ -1,6 +1,6 @@
 #include "Database.h"
 #include "Log.h"
-
+#include <string>
 #define RESULT_CHECK(R,C) if(!R) \
 { \
     Log::Fatal("\nError! %s", mysqlx_error_message(C));\
@@ -8,11 +8,25 @@
 
 //currently all methods are actually locked into a single thread.
 //docker run -d -p 3306:3306 -p 33060:33060 --name mysqlx -e MYSQL_ROOT_PASSWORD=1234 mysql
-//must be 64 bit?
+#define DROP // 初始化自动删库
 Database::Database()
 {
-#define DROP // 初始化自动删库
     sess = mysqlx_get_session_from_url("mysqlx://root:1234@127.0.0.1:33060",&error);
+    InitDb();
+}
+Database::Database(char** opt)
+{
+    std::string connString = "mysqlx://";
+    connString = connString + opt[1] + ":" + opt[2] + "@" + opt[0];
+    sess = mysqlx_get_session_from_url(connString.c_str(),&error);
+}
+Database::~Database()
+{
+    mysqlx_session_close(sess);
+}
+
+void Database::InitDb()
+{
     if(!sess)
     {
         Log::Fatal("Error mysqlx:%s",mysqlx_error_message(error));
@@ -71,13 +85,5 @@ Database::Database()
     RESULT_CHECK(res,sess);
 
     db = mysqlx_get_schema(sess,"db",1);
-
 }
-
-Database::~Database()
-{
-    mysqlx_session_close(sess);
-}
-
-
 

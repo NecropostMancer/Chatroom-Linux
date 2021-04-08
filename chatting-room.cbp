@@ -43,16 +43,12 @@
 		<Unit filename="include/ChatLog.h" />
 		<Unit filename="include/Database.h" />
 		<Unit filename="include/Entity.h" />
-		<Unit filename="include/ISerializable.h" />
 		<Unit filename="include/Log.h" />
 		<Unit filename="include/Permission.h" />
-		<Unit filename="include/QueueCAS.h" />
 		<Unit filename="include/Room.h" />
-		<Unit filename="include/Server.h" />
 		<Unit filename="include/ServerWorker.h" />
 		<Unit filename="include/ServerWorkerInter.h" />
 		<Unit filename="include/SingleThreadTCPServer.h" />
-		<Unit filename="include/ThreadPool.h" />
 		<Unit filename="include/User.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="protobuf/out/Chat.pb.cc" />
@@ -72,7 +68,6 @@
 		<Unit filename="src/Log.cpp" />
 		<Unit filename="src/Permission.cpp" />
 		<Unit filename="src/Room.cpp" />
-		<Unit filename="src/Server.cpp" />
 		<Unit filename="src/ServerWorker.cpp" />
 		<Unit filename="src/SingleThreadTCPServer.cpp" />
 		<Unit filename="src/User.cpp" />

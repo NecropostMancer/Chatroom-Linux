@@ -15,6 +15,7 @@ class Database
 {
     public:
         Database();
+        Database(char** opt);
         virtual ~Database();
         mysqlx_session_t* GetSession()
         {
@@ -23,7 +24,7 @@ class Database
     protected:
 
     private:
-
+        void InitDb();
         const int MAX_FD = 65535;
 
         mysqlx_session_t* sess;

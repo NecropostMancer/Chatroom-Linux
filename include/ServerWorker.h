@@ -9,7 +9,6 @@
 #ifndef SERVERWORKER_H
 #define SERVERWORKER_H
 
-#include "ThreadPool.h"
 #include "sys/uio.h"
 #include <cstdlib>
 #include <cstring>
